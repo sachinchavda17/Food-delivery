@@ -1,5 +1,5 @@
 import React from "react";
-import bannerImg from "../assets/frontend_assets/header_img.png"; // Ensure the path is correct
+import bannerImg from "../assets/header_img.png"; // Ensure the path is correct
 
 const Banner = () => {
   return (

@@ -38,7 +38,7 @@
 
 // export default ExploreMenu;
 import React from "react";
-import { menu_list } from "../assets/frontend_assets/assets"; // Assuming you have the menu list data
+import { menu_list } from "../assets/assets"; // Assuming you have the menu list data
 
 const ExploreMenu = () => {
   return (
