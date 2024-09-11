@@ -10,13 +10,17 @@ module.exports = {
           DEFAULT: "#FF6347", // Tomato color
           light: "#FFA07A", // Light tomato
         },
+        accent: {
+          DEFAULT: "#FF4500", // Stronger orange-red
+          light: "#FA8072", // Light coral
+        },
         secondary: {
           DEFAULT: "#2C3E50", // Dark grayish color
           light: "#BDC3C7", // Soft gray
         },
-        accent: {
-          DEFAULT: "#FF4500", // Stronger orange-red
-          light: "#FA8072", // Light coral
+        ternary: {
+          DEFAULT: "#e5e7eb", // Neutral Gray
+          light: "#9ca3af", // Lighter gray, perfect for subtle borders or backgrounds
         },
         background: {
           DEFAULT: "#FFFFFF", // White for light mode
@@ -27,7 +31,8 @@ module.exports = {
         "primary-dark": "#FF6347", // Same Tomato color
         "secondary-dark": "#1C2833", // Darker gray
         "accent-dark": "#FF4500", // Dark strong orange-red
-        "background-dark": "#2C3E50", // Dark background
+        "ternary-dark": "#d1d5db", // Light gray for dark mode (neutral)
+        "background-dark": "#111827", // Dark background
       },
     },
   },

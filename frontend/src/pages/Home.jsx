@@ -1,14 +1,20 @@
-import React from 'react'
-import Banner from '../components/Banner'
-import ExploreMenu from '../components/ExploreMenu'
+import React, { useState } from "react";
+import Banner from "../components/Banner";
+import ExploreMenu from "../components/ExploreMenu";
+import Foods from "../components/Foods";
+import Cart from "../components/Cart";
 
 const Home = () => {
+  const [category, setCategory] = useState("All");
   return (
-    <div className=''>
-        <Banner/>
-        <ExploreMenu/>
-    </div>
-  )
-}
+    <div className="">
+      <Banner />
+      <ExploreMenu category={category} setCategory={setCategory} />
+      <Foods category={category} />
 
-export default Home
+
+    </div>
+  );
+};
+
+export default Home;

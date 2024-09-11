@@ -4,6 +4,7 @@ export const addToCart = async (req, res) => {
   try {
     const userId = req.body.userId; // user ID passed in the request
     const { itemId, quantity } = req.body; // food item and quantity
+    console.log(userId, itemId, quantity);
     let user = await User.findById(userId);
     let cart = user.carts || [];
 

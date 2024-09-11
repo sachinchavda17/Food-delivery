@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import {
   AiOutlineMenu,
@@ -7,13 +7,18 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
+import { useCookies } from "react-cookie";
+import toast from "react-hot-toast";
+import { StoreContext } from "../utils/StoreContext";
 
-const Navbar = () => {
+const Navbar = ({ setShowAuth }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-
+  const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
+  const { cartCount } = useContext(StoreContext);
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -29,9 +34,14 @@ const Navbar = () => {
   const handleSearchToggle = () => {
     setSearchOpen(!searchOpen);
   };
+  const handleLogout = () => {
+    removeCookie("foodToken", { path: "/" });
+    localStorage.clear("user");
+    toast.success("Logged out successfully");
+  };
 
   return (
-    <nav className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
+    <nav className=" fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <div className="flex items-center">
@@ -42,19 +52,16 @@ const Navbar = () => {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:underline">
+          <Link to="/" className="text-sm font-medium hover:border-b-2">
             Home
           </Link>
-          <Link to="/menu" className="text-sm font-medium hover:underline">
+          <Link to="/menu" className="text-sm font-medium hover:border-b-2">
             Menu
           </Link>
-          <Link to="/cart" className="text-sm font-medium hover:underline">
-            Cart
-          </Link>
-          <Link to="/orders" className="text-sm font-medium hover:underline">
+          <Link to="/orders" className="text-sm font-medium hover:border-b-2">
             Orders
           </Link>
-          <Link to="/about" className="text-sm font-medium hover:underline">
+          <Link to="/about" className="text-sm font-medium hover:border-b-2">
             About Us
           </Link>
         </div>
@@ -86,10 +93,12 @@ const Navbar = () => {
           </div>
 
           {/* Cart Icon */}
-          <button className="relative">
+          <Link className="relative" to={"/cart"}>
             <AiOutlineShoppingCart className="text-2xl text-gray-600 dark:text-gray-100" />
-            <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3"></span>
-          </button>
+            {!!cartCount && (
+              <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3" />
+            )}
+          </Link>
 
           {/* Dark Mode Toggle */}
           <button
@@ -104,12 +113,21 @@ const Navbar = () => {
           </button>
 
           {/* Sign-In Button */}
-          <Link
-            to="/signin"
-            className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary dark:text-primary-dark px-4 py-2 rounded-full hover:bg-primary hover:text-white dark:hover:bg-primary-dark transition"
-          >
-            Sign In
-          </Link>
+          {!cookies.foodToken ? (
+            <div
+              onClick={() => setShowAuth(true)}
+              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary  px-4 py-2 rounded-full  hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
+            >
+              Sign In
+            </div>
+          ) : (
+            <div
+              onClick={() => handleLogout()}
+              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary  px-4 py-2 rounded-full  hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
+            >
+              Log out
+            </div>
+          )}
 
           {/* Mobile Menu Toggle */}
           <div className="md:hidden">

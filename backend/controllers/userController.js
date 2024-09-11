@@ -19,7 +19,22 @@ export const loginController = async (req, res) => {
       return res.json({ success: false, error: "Invalid Credentials!" });
     }
     const token = createToken(user._id);
-    res.json({ token, success: true, message: "User logged in." });
+    // Set the token in an HTTP-only, Secure, and SameSite cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 60 * 60 * 1000, // 1 hour
+    });
+
+    res
+      .status(201)
+      .json({
+        success: true,
+        token,
+        user,
+        message: "User successfully created",
+      });
   } catch (error) {
     console.error("Error registering user :", error);
     res.status(500).json({ error: "Failed to register user", success: false });
@@ -65,12 +80,22 @@ export const registerController = async (req, res) => {
     });
     const user = await newUser.save();
     const token = createToken(user._id);
-    res.json({
-      success: true,
-      token,
-      user,
-      message: "User Successfully created.",
+    // Set the token in an HTTP-only, Secure, and SameSite cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 60 * 60 * 1000, // 1 hour
     });
+
+    res
+      .status(201)
+      .json({
+        success: true,
+        token,
+        user,
+        message: "User successfully created",
+      });
   } catch (error) {
     console.error("Error registering user :", error);
     res.status(500).json({ error: "Failed to register user", success: false });
@@ -82,7 +107,10 @@ export const userProfileController = async (req, res) => {
     const { userId } = req.body;
     const user = await User.findById(userId);
     if (!user) {
-      res.status(500).json({ error: "User doesn't exixts please enter valid user id", success: false });
+      res.status(500).json({
+        error: "User doesn't exixts please enter valid user id",
+        success: false,
+      });
     }
     res.json({ success: true, user });
   } catch (error) {

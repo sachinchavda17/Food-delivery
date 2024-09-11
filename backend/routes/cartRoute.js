@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.post("/add-cart", authMiddleware, addToCart);
 router.post("/remove-cart", authMiddleware, removeFromCart);
-router.get("/get-cart", authMiddleware, getCart);
+router.get("/get-cart",  getCart);
 
 export default router;
