@@ -1,8 +1,14 @@
-import React, { useState } from "react";
-import { AiOutlineClose, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import React, { useContext, useState } from "react";
+import {
+  AiOutlineClose,
+  AiOutlineEye,
+  AiOutlineEyeInvisible,
+} from "react-icons/ai";
 import { toast, Toaster } from "react-hot-toast";
-import { useCookies } from "react-cookie";
-
+// import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
+// import Cookies from "js-cookie";
+import { StoreContext } from "../utils/StoreContext";
 const AuthModal = ({ showAuth, setShowAuth }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -13,8 +19,10 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
 
   const [isSignupMode, setIsSignupMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
-
+  // const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { token, setToken } = useContext(StoreContext);
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -25,6 +33,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setIsSubmitting(true);
       if (isSignupMode && formData.password !== formData.confirmPassword) {
         toast.error("Passwords do not match.");
         return;
@@ -40,20 +49,24 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       });
 
       const result = await response.json();
-
+      console.log(result);
       if (!response.ok) {
         toast.error(result.error || "An error occurred.");
         return;
       }
+      setToken(result.token);
+      localStorage.setItem("userToken", result.token); // Save user info
+      // if (result?.user?.role === "admin") {
+      //   window.location.href = "https://sachinchavda.vercel.app"; // Redirect to admin project URL
+      // }
 
-      setCookie("foodToken", result.token, { path: "/" }); // Save token in cookies
-      localStorage.setItem("user", JSON.stringify(result.user)); // Save user info
-
-      toast.success(result.message || "Operation successful.");
+      toast.success(result.message || "Login successful.");
       setShowAuth(false); // Close modal after submission
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Failed to submit the form. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -151,8 +164,13 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
           <button
             type="submit"
             className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary-dark transition"
+            disabled={isSubmitting}
           >
-            {isSignupMode ? "Sign Up" : "Log In"}
+            {isSubmitting
+              ? "Processing..."
+              : isSignupMode
+              ? "Sign Up"
+              : "Log In"}
           </button>
         </form>
         <div className="mt-4 text-center">

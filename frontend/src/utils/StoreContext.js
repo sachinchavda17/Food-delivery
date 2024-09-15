@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { food_list } from "../assets/assets";
-import { getDataApi, postDataApi } from "./api";
+import { getDataApi, postDataApi, deleteDataApi } from "./api";
 import { toast } from "react-hot-toast";
 
 export const StoreContext = createContext();
@@ -10,122 +9,161 @@ const StoreContextProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
   const [cartSubTotal, setCartSubTotal] = useState(0);
   const [foods, setFoods] = useState([]);
-  const [quantity, setQuantity] = useState(1);
-
-  useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("swiftbuyUser"));
-    // if (cookies?.swiftbuyToken && storedUser) {
-    //   setIsLogin(true);
-    //   setUser(storedUser);
-    // }
-    // if (storedUser?.role === "admin" && cookies?.swiftbuyToken) {
-    //   setIsAdmin(true);
-    // }
-  }, []);
+  const [token, setToken] = useState("");
+  console.log(cartItems[0]?.food);
 
   useEffect(() => {
     let count = 0;
     let subTotal = 0;
 
     cartItems.forEach((item) => {
-      count += item.quantity;
-      subTotal += item.item.price * item.quantity;
+      if (item?.item?.price) {
+        // Check if item and item.price are defined
+        count += item.quantity;
+        subTotal += item.item.price * item.quantity;
+      }
     });
+
     setCartCount(count);
-    console.log(count);
     setCartSubTotal(subTotal.toFixed(2));
   }, [cartItems]);
 
-  const addToCart = async (item, quantity) => {
-    try {
-      // const response = await postDataApi(`/api/cart/add-cart`, {
-      //   itemId: item._id,
-      //   quantity,
-      // });
-      // console.log(response);
+  const getAllFoods = async () => {
+    const res = await getDataApi("/api/foods/list");
+    setFoods(res.foods);
+  };
 
-      // if (response.success && response) {
-      let items = [...cartItems];
-      let index = items.findIndex((p) => p.item._id === item._id);
-      if (index !== -1) {
-        // Item already exists in the cart, update the quantity
-        items[index].quantity += quantity;
+  useEffect(() => {
+    getAllFoods();
+    const existsToken = localStorage.getItem("userToken");
+    if (existsToken) {
+      setToken(existsToken);
+      // console.log("Token retrieved:", existsToken); // Debug line
+    }
+  }, []);
+
+  const getCarts = async () => {
+    try {
+      // Ensure the token is retrieved and set before making the API call
+      const existsToken = localStorage.getItem("userToken");
+      if (existsToken) {
+        setToken(existsToken);
+        // Wait until the state is updated (not recommended generally, but for debugging it can help)
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const res = await getDataApi("/api/carts/get", existsToken); // Use existsToken directly
+        if (res.success) {
+          setCartItems(res.cart);
+        } else {
+          toast.error(res.error || "Failed to fetch carts");
+        }
       } else {
-        // Add a new item to the cart
-        items.push({ item, quantity });
+        toast.error("No token found");
       }
-      // if (index !== -1) {
-      //   items[index].quantity += quantity;
-      // } else {
-      // items = [...items, { ...cartItems, item }];
-      // }
-      setCartItems(items);
-      console.log(cartItems);
-      toast.success("Item added to cart");
-      // } else {
-      //   toast.error(response?.response?.data?.error || "Add to cart failed!");
-      // }
     } catch (error) {
-      console.error("Error adding to cart:", error);
-      toast.error("Add to cart failed!");
+      // console.error("Error fetching carts:", error);
+      toast.error("Failed to fetch carts");
     }
   };
 
-  const removeFromCart = (itemId) => {
-    setCartItems((prevItems) =>
-      prevItems.filter((item) => item.item._id !== itemId)
-    );
-    toast.success("Item removed from cart");
-  };
-
-  const incrementQuantity = () => {
-    setQuantity((prevQuantity) => {
-      if (prevQuantity < 5) {
-        return prevQuantity + 1;
-      } else {
-        toast.error("You reached the maximum quantity!");
-        return prevQuantity; // Return the current quantity if limit is reached
-      }
-    });
-  };
-
-  const decrementQuantity = () => {
-    setQuantity((prevState) => {
-      if (prevState === 1) return removeFromCart();
-      else return prevState - 1;
-    });
-  };
-
-  const getAllFoods = async () => {
-    const res = await getDataApi("/api/food/list");
-    setFoods(res.foods);
-  };
   useEffect(() => {
-    getAllFoods();
+    getCarts();
   }, []);
 
-  // Function to add or update a cart item
-  // const updateCartItem = (newItem, quantity) => {
-  //   setCart((prevCart) => {
-  //     const existingItem = prevCart.find((item) => item.id === newItem.id);
+  const addToCart = async (item, quantity) => {
+    try {
+      const response = await postDataApi(
+        `/api/carts/add`,
+        {
+          foodId: item._id,
+          quantity,
+        },
+        token
+      );
 
-  //     if (existingItem) {
-  //       // Update item quantity if it already exists in the cart
-  //       if (quantity === 0) {
-  //         return prevCart.filter((item) => item.id !== newItem.id);
-  //       } else {
-  //         return prevCart.map((item) =>
-  //           item.id === newItem.id
-  //             ? { ...item, quantity: Math.max(quantity, 1) }
-  //             : item
-  //         );
-  //       }
-  //     } else {
-  //       // Add new item to the cart if it doesn't exist
-  //       return [...prevCart, { ...newItem, quantity }];
-  //     }
-  //   });
-  // };
+      if (response.success) {
+        let updatedCartItems = [...cartItems];
+        const itemIndex = updatedCartItems.findIndex(
+          (cartItem) => cartItem.food._id === item._id
+        );
+
+        if (itemIndex !== -1) {
+          // If the item already exists in the cart, update the quantity
+          updatedCartItems[itemIndex].quantity += quantity;
+        } else {
+          // Add the new item to the cart
+          updatedCartItems.push({ food: item, quantity });
+        }
+
+        setCartItems(updatedCartItems);
+        toast.success(response.message || "Item added to cart");
+      } else {
+        toast.error(response.error || "Failed to add item to cart");
+      }
+    } catch (error) {
+      // console.error("Error adding to cart:", error);
+      toast.error("Failed to add item to cart");
+    }
+  };
+
+  const removeFromCart = async (foodId) => {
+    try {
+      const response = await deleteDataApi(
+        `/api/carts/remove/${foodId}`,
+        token
+      );
+
+      if (response.success) {
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.food._id !== foodId)
+        );
+        toast.success("Item removed from cart");
+      } else {
+        toast.error(response.message || "Failed to remove item");
+      }
+    } catch (error) {
+      // console.error("Error removing from cart:", error);
+      toast.error("Failed to remove item");
+    }
+  };
+
+  const updateCartItemQuantity = async (foodId, action) => {
+    try {
+      const response = await postDataApi(
+        `/api/carts/update`,
+        { foodId, action },
+        token
+      );
+
+      if (response.success) {
+        // Update the cart item quantity
+        let updatedCartItems = [...cartItems];
+        const itemIndex = updatedCartItems.findIndex(
+          (cartItem) => cartItem.item._id === foodId
+        );
+
+        if (itemIndex !== -1) {
+          if (action === "increase") {
+            updatedCartItems[itemIndex].quantity += 1;
+          } else if (action === "decrease") {
+            if (updatedCartItems[itemIndex].quantity > 1) {
+              updatedCartItems[itemIndex].quantity -= 1;
+            } else {
+              updatedCartItems.splice(itemIndex, 1); // Remove the item if the quantity reaches 0
+            }
+          }
+        }
+
+        setCartItems(updatedCartItems);
+        toast.success(response.message);
+      } else {
+        toast.error(response.message || "Failed to update item quantity");
+      }
+    } catch (error) {
+      // console.error("Error updating quantity:", error);
+      toast.error("Failed to update item quantity");
+    }
+  };
 
   const contextValue = {
     foods,
@@ -135,12 +173,11 @@ const StoreContextProvider = ({ children }) => {
     setCartItems,
     cartSubTotal,
     setCartSubTotal,
-    incrementQuantity,
-    decrementQuantity,
-    quantity,
-    setQuantity,
+    updateCartItemQuantity,
     cartCount,
     setCartCount,
+    token,
+    setToken,
   };
   return (
     <StoreContext.Provider value={contextValue}>

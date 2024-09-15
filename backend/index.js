@@ -23,10 +23,10 @@ app.get("/", (req, res) => {
   res.send("Server is live 🎉");
 });
 
-app.use("/api/food",foodRoute)
+app.use("/api/foods",foodRoute)
 app.use("/api/user",userRoute)
-app.use("/api/cart",cartRoute)
-app.use("/api/order",orderRoute)
+app.use("/api/carts",cartRoute)
+app.use("/api/orders",orderRoute)
 
 
 app.listen(PORT, () => {

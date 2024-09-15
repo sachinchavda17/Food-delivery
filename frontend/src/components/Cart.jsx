@@ -41,19 +41,19 @@ const Cart = () => {
 
             {cartItems?.map((itemData) => {
               return (
-                <div key={itemData.item._id}>
+                <div key={itemData.food?._id}>
                   <div className="cart-items-item grid grid-cols-6 items-center py-4">
                     <img
-                      src={itemData.item?.image}
+                      src={itemData.food?.image}
                       alt=""
                       className="w-12 h-12 object-cover"
                     />
-                    <p>{itemData.item?.name}</p>
-                    <p>${itemData.item?.price}</p>
+                    <p>{itemData.food?.name}</p>
+                    <p>${itemData.food?.price}</p>
                     <p>{itemData.quantity}</p>
-                    <p>${itemData.item?.price * itemData.quantity}</p>
+                    <p>${itemData.food?.price * itemData.quantity}</p>
                     <button
-                      onClick={() => removeFromCart(itemData.item._id)}
+                      onClick={() => removeFromCart(itemData.food._id)}
                       className="text-red-600 cursor-pointer"
                     >
                       Remove

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AiOutlineMenu,
   AiOutlineClose,
@@ -7,18 +7,22 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
+import { AiOutlineUser } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { StoreContext } from "../utils/StoreContext";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = ({ setShowAuth }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
-  const { cartCount } = useContext(StoreContext);
-  const user = JSON.parse(localStorage.getItem("user"));
+  // const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
+  const { cartCount, token, setToken } = useContext(StoreContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -34,17 +38,25 @@ const Navbar = ({ setShowAuth }) => {
   const handleSearchToggle = () => {
     setSearchOpen(!searchOpen);
   };
+
   const handleLogout = () => {
-    removeCookie("foodToken", { path: "/" });
-    localStorage.clear("user");
+    // removeCookie("foodToken", { path: "/" });
+    localStorage.clear("userToken");
     toast.success("Logged out successfully");
   };
 
+  const handleDropdownToggle = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
-    <nav className=" fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
+    <nav className="fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
-        <div className="flex items-center">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <h1 className="text-2xl font-bold text-primary dark:text-primary-dark">
             Tomato.
           </h1>
@@ -112,20 +124,50 @@ const Navbar = ({ setShowAuth }) => {
             )}
           </button>
 
-          {/* Sign-In Button */}
-          {!cookies.foodToken ? (
-            <div
-              onClick={() => setShowAuth(true)}
-              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary  px-4 py-2 rounded-full  hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
-            >
-              Sign In
+          {/* User Icon and Dropdown */}
+          {token ? (
+            <div className="relative">
+              <div
+                className="hidden md:flex items-center cursor-pointer bg-transparent border border-primary dark:border-primary-dark text-primary p-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition"
+                onClick={handleDropdownToggle}
+              >
+                <FaUser size={20} />
+              </div>
+
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-10">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                  {/* <Link
+                    to="/orders"
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    My Orders
+                  </Link> */}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setDropdownOpen(false);
+                    }}
+                    className="block w-full px-4 py-2 text-left text-red-600 dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <div
-              onClick={() => handleLogout()}
-              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary  px-4 py-2 rounded-full  hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
+              onClick={() => setShowAuth(true)}
+              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary px-4 py-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
             >
-              Log out
+              Sign In
             </div>
           )}
 

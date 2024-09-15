@@ -8,10 +8,11 @@ const FoodItem = ({ item, key }) => {
     cartItems,
     addToCart,
     removeFromCart,
-    incrementQuantity,
-    decrementQuantity,
-    quantity,
+    updateCartItemQuantity,
   } = useContext(StoreContext);
+  const [quantity, setQuantity] = useState(1);
+  console.log(cartItems);
+
   return (
     <div
       className="food-item w-full max-w-sm m-auto rounded-lg shadow-md dark:shadow-background-dark transition duration-300 animate-fadeIn"
@@ -23,7 +24,7 @@ const FoodItem = ({ item, key }) => {
           alt=""
           className="food-item-img w-full transition duration-300 hover:scale-105"
         />
-        {!cartItems[item._id] ? (
+        {item.quantity==1 ? (
           <AiOutlinePlusCircle
             className="add w-9 h-9 absolute bottom-3.5 right-3.5 cursor-pointer rounded-full text-green-500 hover:text-green-600 bg-green-200"
             onClick={() => addToCart(item, quantity)}
@@ -32,12 +33,12 @@ const FoodItem = ({ item, key }) => {
           <div className="food-item-counter flex items-center gap-2 p-1.5 absolute bottom-3.5 right-3.5 bg-background rounded-full">
             <AiOutlineMinusCircle
               className="remove w-6 h-6 cursor-pointer text-primary hover:text-accent transition duration-300"
-              onClick={() => decrementQuantity()}
+              onClick={() => updateCartItemQuantity(item._id, "decrease")}
             />
             <span className="text-black font-medium">{quantity}</span>
             <AiOutlinePlusCircle
               className="add w-6 h-6 cursor-pointer text-green-500 hover:text-green-600 transition duration-300"
-              onClick={() => incrementQuantity()}
+              onClick={() => updateCartItemQuantity(item._id, "increase")}
             />
           </div>
         )}
