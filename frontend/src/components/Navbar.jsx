@@ -58,7 +58,7 @@ const Navbar = ({ setShowAuth }) => {
           onClick={() => navigate("/")}
         >
           <h1 className="text-2xl font-bold text-primary dark:text-primary-dark">
-            Tomato.
+            BiteHub24
           </h1>
         </div>
 

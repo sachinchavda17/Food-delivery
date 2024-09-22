@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Left - Logo and Social Icons */}
           <div className="flex flex-col space-y-4">
-            <span className="text-3xl font-bold text-primary dark:text-primary-dark">Tomato.</span>
+            <span className="text-3xl font-bold text-primary dark:text-primary-dark">BiteHub24</span>
             <p className="dark:text-ternary-dark text-gray-700">
               Lorem Ipsum is simply dummy text of the printing and typesetting industry.
             </p>
@@ -42,7 +42,7 @@ const Footer = () => {
             <h2 className="text-xl font-semibold text-secondary dark:text-ternary-dark">Get in Touch</h2>
             <ul className="space-y-2">
               <li className="hover:text-primary dark:hover:text-primary-dark">+1-212-456-7890</li>
-              <li className="hover:text-primary dark:hover:text-primary-dark">contact@tomato.com</li>
+              <li className="hover:text-primary dark:hover:text-primary-dark">contact@bitehub24.com</li>
             </ul>
           </div>
         </div>
@@ -50,7 +50,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t dark:border-secondary-dark border-gray-300 mt-10 pt-5">
           <p className="text-center text-gray-700 dark:text-ternary-dark">
-            &copy; 2024 Tomato.com - All Rights Reserved
+            &copy; 2024 BiteHub24.com - All Rights Reserved
           </p>
         </div>
       </div>
