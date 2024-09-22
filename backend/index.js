@@ -22,6 +22,8 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Server is live 🎉");
 });
+// Handle favicon request to prevent the 500 error
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 app.use("/api/foods",foodRoute)
 app.use("/api/user",userRoute)

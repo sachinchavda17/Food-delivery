@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000"
+const BASE_URL = process.env.REACT_APP_BASE_URL
 
 // Generalized GET request
 export const getDataApi = async (endpoint, token) => {

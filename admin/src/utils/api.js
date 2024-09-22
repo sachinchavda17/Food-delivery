@@ -1,5 +1,6 @@
 // api.js
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export const getDataApi = async (endpoint) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
