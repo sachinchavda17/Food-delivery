@@ -1,9 +1,9 @@
-const BASE_URL = "http://localhost:8000"; // Replace with your actual base URL
+const BASE_URL = "http://localhost:8000"
 
 // Generalized GET request
 export const getDataApi = async (endpoint, token) => {
   try {
-    console.log("Token being sent:", token); // Debug line
+    // console.log("Token being sent:", token); // Debug line
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {

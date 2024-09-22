@@ -1,6 +1,5 @@
 // api.js
-const BASE_URL = "http://localhost:8000"; // Replace with your actual base URL
-// Generalized GET request
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const getDataApi = async (endpoint) => {
   try {
     const response = await fetch(`${BASE_URL}${endpoint}`, {

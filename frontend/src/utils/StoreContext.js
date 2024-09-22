@@ -10,7 +10,6 @@ const StoreContextProvider = ({ children }) => {
   const [cartSubTotal, setCartSubTotal] = useState(0);
   const [foods, setFoods] = useState([]);
   const [token, setToken] = useState("");
-  console.log(cartItems[0]?.food);
 
   useEffect(() => {
     let count = 0;
@@ -29,8 +28,12 @@ const StoreContextProvider = ({ children }) => {
   }, [cartItems]);
 
   const getAllFoods = async () => {
-    const res = await getDataApi("/api/foods/list");
-    setFoods(res.foods);
+    try {
+      const res = await getDataApi("/api/foods/list");
+      setFoods(res.foods);
+    } catch (error) {
+      toast.error("Failed to load foods");
+    }
   };
 
   useEffect(() => {
@@ -58,7 +61,7 @@ const StoreContextProvider = ({ children }) => {
           toast.error(res.error || "Failed to fetch carts");
         }
       } else {
-        toast.error("No token found");
+        toast.error("Please login to check your carts.");
       }
     } catch (error) {
       // console.error("Error fetching carts:", error);
@@ -129,6 +132,7 @@ const StoreContextProvider = ({ children }) => {
 
   const updateCartItemQuantity = async (foodId, action) => {
     try {
+      console.log("Sending request to update quantity:", foodId, action);
       const response = await postDataApi(
         `/api/carts/update`,
         { foodId, action },
@@ -136,10 +140,9 @@ const StoreContextProvider = ({ children }) => {
       );
 
       if (response.success) {
-        // Update the cart item quantity
         let updatedCartItems = [...cartItems];
         const itemIndex = updatedCartItems.findIndex(
-          (cartItem) => cartItem.item._id === foodId
+          (cartItem) => cartItem.food._id === foodId // Ensure you're accessing the correct property
         );
 
         if (itemIndex !== -1) {
@@ -152,16 +155,17 @@ const StoreContextProvider = ({ children }) => {
               updatedCartItems.splice(itemIndex, 1); // Remove the item if the quantity reaches 0
             }
           }
+        } else {
+          toast.error("Item not found in cart");
         }
 
         setCartItems(updatedCartItems);
         toast.success(response.message);
       } else {
-        toast.error(response.message || "Failed to update item quantity");
+        toast.error(response.error || "Failed to update item quantity");
       }
     } catch (error) {
-      // console.error("Error updating quantity:", error);
-      toast.error("Failed to update item quantity");
+      toast.error("An error occurred while updating item quantity");
     }
   };
 

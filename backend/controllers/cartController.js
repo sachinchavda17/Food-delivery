@@ -56,7 +56,9 @@ export const removeFromCart = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({success:false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // Find the food item in the cart
@@ -70,14 +72,24 @@ export const removeFromCart = async (req, res) => {
       await user.save();
       res
         .status(200)
-        .json({success:true, message: "Item removed from cart", cart: user.carts });
+        .json({
+          success: true,
+          message: "Item removed from cart",
+          cart: user.carts,
+        });
     } else {
-      res.status(404).json({success:false, message: "Item not found in cart" });
+      res
+        .status(404)
+        .json({ success: false, message: "Item not found in cart" });
     }
   } catch (error) {
     res
       .status(500)
-      .json({ success:false,message: "Error removing item from cart", error: error.message });
+      .json({
+        success: false,
+        message: "Error removing item from cart",
+        error: error.message,
+      });
   }
 };
 
@@ -117,7 +129,7 @@ export const updateQuantity = async (req, res) => {
   try {
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ success: false, error: "User not found" });
     }
 
     const foodIndex = user.carts.findIndex(
@@ -139,13 +151,15 @@ export const updateQuantity = async (req, res) => {
       await user.save();
       res
         .status(200)
-        .json({ message: `Quantity ${action}d`, cart: user.carts });
+        .json({
+          success: true,
+          message: `Quantity ${action}d`,
+          cart: user.carts,
+        });
     } else {
-      res.status(404).json({ message: "Item not found in cart" });
+      res.status(404).json({ success: false, error: "Item not found in cart" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error updating quantity", error: error.message });
+    res.status(500).json({ success: false, error: "Error updating quantity" });
   }
 };
