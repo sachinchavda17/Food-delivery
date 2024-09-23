@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { getDataApi } from "../../../frontend/src/utils/api";
 import { useNavigate } from "react-router-dom";
-import { deleteDataApi } from "../utils/api";
+import { deleteDataApi, getDataApi } from "../utils/api";
 import {toast} from "react-hot-toast"
 // Dummy Data
 // const initialItems = [

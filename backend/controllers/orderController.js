@@ -5,19 +5,109 @@ import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// export const placeOrder = async (req, res) => {
+//   try {
+//     const frontend_url = process.env.FRONTEND_URL
+//     const { userId, items, deliveryAddress, paymentMethod } = req.body;
+
+//     // Fetch the items to calculate the total price
+//     const itemDetails = await Promise.all(
+//       items.map(async (item) => {
+//         const foodItem = await Food.findById(item.food);
+//         return {
+//           food: foodItem._id,
+//           quantity: item.quantity,
+//           price: foodItem.price * item.quantity,
+//           name: foodItem.name,
+//         };
+//       })
+//     );
+
+//     // Calculate the total price of the order
+//     const totalPrice =
+//       itemDetails.reduce((total, item) => total + item.price, 0) + 2; // +2 for delivery charges
+
+//     // Create new order
+//     const newOrder = new Order({
+//       user: userId,
+//       items: itemDetails.map((item) => ({
+//         food: item.food,
+//         quantity: item.quantity,
+//       })),
+//       deliveryAddress: {
+//         street: deliveryAddress.street,
+//         city: deliveryAddress.city,
+//         postalCode: deliveryAddress.postalCode,
+//         country: deliveryAddress.country,
+//       },
+//       paymentMethod: paymentMethod,
+//       totalPrice: totalPrice,
+//       paymentStatus: "Pending", // Initial payment status
+//     });
+
+//     await newOrder.save();
+
+//     await User.findByIdAndUpdate(
+//       userId,
+//       { $push: { orders: newOrder._id } },
+//       { carts: [] }
+//     );
+//     // Empty user's cart after placing the order
+//     // await User.findByIdAndUpdate(userId, { carts: [] });
+
+//     // Prepare Stripe payment session
+//     const line_items = itemDetails.map((item) => ({
+//       price_data: {
+//         currency: "inr",
+//         product_data: {
+//           name: item?.name || "Unknown Item", // Provide a name for each product
+//         },
+//         unit_amount: item.price * 100, // Price in smallest currency unit
+//       },
+//       quantity: item.quantity,
+//     }));
+
+//     // Add delivery charges
+//     line_items.push({
+//       price_data: {
+//         currency: "inr",
+//         product_data: {
+//           name: "Delivery Charges",
+//         },
+//         unit_amount: 200, // Delivery charges of 2 INR (in cents/paisa)
+//       },
+//       quantity: 1,
+//     });
+
+//     // Create Stripe session
+//     const session = await stripe.checkout.sessions.create({
+//       line_items: line_items,
+//       mode: "payment",
+//       success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
+//       cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
+//     });
+
+//     res.json({ success: true, session_url: session.url, order: newOrder });
+//   } catch (error) {
+//     console.error("Error placing order:", error);
+//     res.status(500).json({ error: "Failed to place order", success: false });
+//   }
+// };
+
 export const placeOrder = async (req, res) => {
   try {
-    const frontend_url = "http://localhost:3000";
+    const frontend_url = process.env.FRONTEND_URL;
     const { userId, items, deliveryAddress, paymentMethod } = req.body;
 
     // Fetch the items to calculate the total price
     const itemDetails = await Promise.all(
       items.map(async (item) => {
-        const foodItem = await Food.findById(item.foodId);
+        const foodItem = await Food.findById(item.food);
         return {
           food: foodItem._id,
           quantity: item.quantity,
           price: foodItem.price * item.quantity,
+          name: foodItem.name,
         };
       })
     );
@@ -41,47 +131,60 @@ export const placeOrder = async (req, res) => {
       },
       paymentMethod: paymentMethod,
       totalPrice: totalPrice,
-      paymentStatus: "Pending", // Initial payment status
+      paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid", // COD payment status starts as Pending
     });
 
     await newOrder.save();
 
-    // Empty user's cart after placing the order
-    await User.findByIdAndUpdate(userId, { carts: [] });
-
-    // Prepare Stripe payment session
-    const line_items = itemDetails.map((item) => ({
-      price_data: {
-        currency: "inr",
-        product_data: {
-          name: item?.name, // Get food name
-        },
-        unit_amount: item.price * 100, // Convert price to smallest currency unit
-      },
-      quantity: item.quantity,
-    }));
-
-    // Add delivery charges
-    line_items.push({
-      price_data: {
-        currency: "inr",
-        product_data: {
-          name: "Delivery Charges",
-        },
-        unit_amount: 200, // Assuming delivery charges are 2 INR
-      },
-      quantity: 1,
+    // Update user orders and clear cart
+    await User.findByIdAndUpdate(userId, {
+      $push: { orders: { orderId: newOrder._id } },
+      carts: [],
     });
 
-    // Create Stripe session
-    const session = await stripe.checkout.sessions.create({
-      line_items: line_items,
-      mode: "payment",
-      success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
-      cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
-    });
+    if (paymentMethod === "COD" || paymentMethod === "cod") {
+      // If payment method is COD, return success without Stripe session
+      res.json({
+        success: true,
+        message: "Order placed successfully. Pay upon delivery.",
+        order: newOrder,
+        session_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
+      });
+    } else {
+      // Prepare Stripe payment session for card payments
+      const line_items = itemDetails.map((item) => ({
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: item?.name || "Unknown Item", // Provide a name for each product
+          },
+          unit_amount: item.price * 100, // Price in smallest currency unit
+        },
+        quantity: item.quantity,
+      }));
 
-    res.json({ success: true, session_url: session.url, order: newOrder });
+      // Add delivery charges
+      line_items.push({
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: "Delivery Charges",
+          },
+          unit_amount: 200, // Delivery charges of 2 INR (in cents/paisa)
+        },
+        quantity: 1,
+      });
+
+      // Create Stripe session
+      const session = await stripe.checkout.sessions.create({
+        line_items: line_items,
+        mode: "payment",
+        success_url: `${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
+        cancel_url: `${frontend_url}/verify?success=false&orderId=${newOrder._id}`,
+      });
+
+      res.json({ success: true, session_url: session.url, order: newOrder });
+    }
   } catch (error) {
     console.error("Error placing order:", error);
     res.status(500).json({ error: "Failed to place order", success: false });
@@ -91,15 +194,26 @@ export const placeOrder = async (req, res) => {
 export const verifyOrder = async (req, res) => {
   try {
     const { orderId, success } = req.body;
+    if (!orderId) {
+      return res.status(400).json({ success: false, error: "Order ID is required" });
+    }
     if (success === "true") {
-      await Order.findByIdAndUpdate(orderId, {
-        paymentStatus: "Paid",
-        orderStatus: "Pending",
-      });
-      res.json({ success: true, message: "Order paid successfully" });
+      const order = await Order.findById(orderId);
+      if (!order) {
+        return res.status(404).json({ success: false, error: "Order not found" });
+      }
+      if (order.paymentMethod === "Card" && order.paymentStatus === "Pending") {
+        await Order.findByIdAndUpdate(orderId, {
+          paymentStatus: "Paid",
+          orderStatus: "Pending",
+        });
+        res.json({ success: true, message: "Order Paid Successfully" });
+      } else {
+        res.json({ success: true, message: "Order Placed Successfully" });
+      }
     } else {
       await Order.findByIdAndDelete(orderId);
-      res.json({ success: false, message: "Payment failed, order cancelled" });
+      res.json({ success: false, error: "Payment failed, order cancelled" });
     }
   } catch (error) {
     console.error("Error verifying order:", error);

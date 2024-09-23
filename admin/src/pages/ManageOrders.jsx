@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
-import { getDataApi } from "../../../frontend/src/utils/api";
-import { deleteDataApi, putDataApi } from "../utils/api";
+import { deleteDataApi, putDataApi ,getDataApi} from "../utils/api";
 import {toast} from "react-hot-toast"
 const OrderManage = () => {
   const [orders, setOrders] = useState([]);

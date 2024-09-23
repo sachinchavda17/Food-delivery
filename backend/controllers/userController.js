@@ -27,14 +27,12 @@ export const loginController = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        token,
-        user,
-        message: "User successfully created",
-      });
+    res.status(201).json({
+      success: true,
+      token,
+      user,
+      message: "User successfully created",
+    });
   } catch (error) {
     console.error("Error registering user :", error);
     res.status(500).json({ error: "Failed to register user", success: false });
@@ -88,14 +86,12 @@ export const registerController = async (req, res) => {
       maxAge: 60 * 60 * 1000, // 1 hour
     });
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        token,
-        user,
-        message: "User successfully created",
-      });
+    res.status(201).json({
+      success: true,
+      token,
+      user,
+      message: "User successfully created",
+    });
   } catch (error) {
     console.error("Error registering user :", error);
     res.status(500).json({ error: "Failed to register user", success: false });
@@ -116,5 +112,69 @@ export const userProfileController = async (req, res) => {
   } catch (error) {
     console.error("Error getting user data :", error);
     res.status(500).json({ error: "Failed to get user data", success: false });
+  }
+};
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      street,
+      city,
+      postalCode,
+      country,
+      phone,
+      userId,
+    } = req.body; // Extract data from the request body
+    console.log(req.body);
+    
+    // Find the user by ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Update user details
+    if (name) user.name = name;
+    if (email) user.email = email;
+
+    // Check if password is provided and hash it before saving
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    // Add new address to the addresses array if provided
+    if (street && city && postalCode && country) {
+      const newAddress = {
+        street,
+        city,
+        postalCode,
+        country,
+      };
+
+      user.addresses.push(newAddress); // Add new address to the array
+    }
+
+    // Update phone number
+    if (phone) user.phone = phone;
+
+    // Save the updated user details
+    const updatedUser = await user.save();
+    console.log(updatedUser);
+    
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ success: false, error: "Server error" });
   }
 };

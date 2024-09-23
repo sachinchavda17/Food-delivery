@@ -14,12 +14,14 @@ const userSchema = new mongoose.Schema(
       enum: ["customer", "admin"],
       default: "customer", // Default role is customer
     },
-    address: {
-      street: { type: String },
-      city: { type: String },
-      postalCode: { type: String },
-      country: { type: String },
-    },
+    addresses: [
+      {
+        street: { type: String },
+        city: { type: String },
+        postalCode: { type: String },
+        country: { type: String },
+      },
+    ],
     carts: [
       {
         food: {
@@ -34,8 +36,7 @@ const userSchema = new mongoose.Schema(
     ],
     orders: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Order", // Reference to Order model
+        orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order" }, // Adding orderId
       },
     ],
 

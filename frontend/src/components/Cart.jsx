@@ -13,7 +13,7 @@ const Cart = () => {
     cartSubTotal,
   } = useContext(StoreContext);
   const navigate = useNavigate();
-
+  console.log(cartSubTotal);
   const isEmpty = cartItems.length === 0;
 
   return (
@@ -22,14 +22,14 @@ const Cart = () => {
         // Empty Cart UI
         <div className="empty-cart flex flex-col items-center justify-center h-72 text-center">
           <AiOutlineShoppingCart className="text-6xl text-gray-400 dark:text-gray-600 mb-4" />
-          <p className="text-xl text-gray-500 dark:text-gray-300">
+          <p className="text-xl text-gray-500 dark:text-ternary-light">
             Opps! Your cart is empty.
           </p>
         </div>
       ) : (
         <>
           <div className="cart-items w-full">
-            <div className="cart-items-title grid grid-cols-6 text-sm text-gray-500 dark:text-gray-300">
+            <div className="cart-items-title grid grid-cols-6 text-sm text-gray-500 dark:text-ternary-light">
               <p>Items</p>
               <p>Title</p>
               <p>Price</p>
@@ -42,7 +42,7 @@ const Cart = () => {
             {cartItems?.map((itemData) => {
               return (
                 <div key={itemData.food?._id}>
-                  <div className="cart-items-item grid grid-cols-6 items-center py-4">
+                  <div className="cart-items-item grid grid-cols-6 items-center py-4 dark:text-ternary-light">
                     <img
                       src={itemData.food?.image}
                       alt=""
@@ -78,17 +78,14 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between">
                   <p>Delivery Fee</p>
-                  <p>${cartSubTotal === 0 ? 0 : 2}</p>
+                  <p> &#8377; 2</p>
                 </div>
                 <hr />
                 <div className="flex justify-between font-bold">
                   <p>Total</p>
                   <p>
                     &#8377;
-                    {(Number(cartSubTotal) + cartSubTotal === 0
-                      ? 0
-                      : 2
-                    ).toFixed(2)}
+                    {(Number(cartSubTotal) + (cartSubTotal === 0 ? 0 : 2)).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -102,7 +99,7 @@ const Cart = () => {
 
             {/* Promo Code Section */}
             <div className="cart-promocode">
-              <p className="mb-2 text-gray-600 dark:text-gray-300">
+              <p className="mb-2 text-gray-600 dark:text-ternary-light">
                 If you have a promo code, enter it here:
               </p>
               <div className="cart-promocode-input flex space-x-2">

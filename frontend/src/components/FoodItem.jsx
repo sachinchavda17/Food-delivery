@@ -11,7 +11,6 @@ const FoodItem = ({ item }) => {
     (cartItem) => cartItem.food._id === item._id
   );
   const quantity = currentCartItem ? currentCartItem.quantity : 0;
-  console.log(item);
   return (
     <div className="food-item w-full max-w-sm m-auto rounded-lg shadow-md dark:shadow-background-dark transition duration-300 animate-fadeIn">
       <div className="food-item-img-container relative rounded-t-lg overflow-hidden">

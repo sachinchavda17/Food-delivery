@@ -16,10 +16,11 @@ const StoreContextProvider = ({ children }) => {
     let subTotal = 0;
 
     cartItems.forEach((item) => {
-      if (item?.item?.price) {
+      console.log(item);
+      if (item?.food?.price) {
         // Check if item and item.price are defined
         count += item.quantity;
-        subTotal += item.item.price * item.quantity;
+        subTotal += item.food.price * item.quantity;
       }
     });
 
