@@ -42,17 +42,15 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
 
       const endpoint = isSignupMode ? "/api/user/register" : "/api/user/login";
       const response = await postDataApi(endpoint, formData);
-
-      const result = await response.json();
-      console.log(result);
-      if (!response.ok) {
-        toast.error(result.error || "An error occurred.");
+      
+      if (!response.success) {
+        toast.error(response.error || "An error occurred.");
         return;
       }
-      setToken(result.token);
-      localStorage.setItem("userToken", result.token); 
+      setToken(response.token);
+      localStorage.setItem("userToken", response.token);
 
-      toast.success(result.message || "Login successful.");
+      toast.success(response.message || "Login successful.");
       setShowAuth(false); // Close modal after submission
     } catch (error) {
       console.error("Error submitting form:", error);
