@@ -9,6 +9,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 // import Cookies from "js-cookie";
 import { StoreContext } from "../utils/StoreContext";
+import { postDataApi } from "../utils/api";
 const AuthModal = ({ showAuth, setShowAuth }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -40,13 +41,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       }
 
       const endpoint = isSignupMode ? "/api/user/register" : "/api/user/login";
-      const response = await fetch("http://localhost:8000" + endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await postDataApi(endpoint, formData);
 
       const result = await response.json();
       console.log(result);
@@ -55,16 +50,15 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
         return;
       }
       setToken(result.token);
-      localStorage.setItem("userToken", result.token); // Save user info
-      // if (result?.user?.role === "admin") {
-      //   window.location.href = "https://sachinchavda.vercel.app"; // Redirect to admin project URL
-      // }
+      localStorage.setItem("userToken", result.token); 
 
       toast.success(result.message || "Login successful.");
       setShowAuth(false); // Close modal after submission
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Failed to submit the form. Please try again.");
+      toast.error(
+        error.message || "Failed to submit the form. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
