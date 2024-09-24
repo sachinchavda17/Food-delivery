@@ -7,7 +7,6 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
-// import { useCookies } from "react-cookie";
 import { AiOutlineUser } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { StoreContext } from "../utils/StoreContext";
@@ -18,7 +17,6 @@ const Navbar = ({ setShowAuth }) => {
   const [darkMode, setDarkMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  // const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
   const { cartCount, token, setToken } = useContext(StoreContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -42,6 +40,7 @@ const Navbar = ({ setShowAuth }) => {
   const handleLogout = () => {
     // removeCookie("foodToken", { path: "/" });
     localStorage.clear("userToken");
+    setToken("")
     toast.success("Logged out successfully");
   };
 
@@ -70,7 +69,7 @@ const Navbar = ({ setShowAuth }) => {
           <Link to="/menu" className="text-sm font-medium hover:border-b-2">
             Menu
           </Link>
-          <Link to="/orders" className="text-sm font-medium hover:border-b-2">
+          <Link to="/myorders" className="text-sm font-medium hover:border-b-2">
             Orders
           </Link>
           <Link to="/about" className="text-sm font-medium hover:border-b-2">
@@ -213,7 +212,7 @@ const Navbar = ({ setShowAuth }) => {
             Cart
           </Link>
           <Link
-            to="/orders"
+            to="/myorders"
             className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             Orders

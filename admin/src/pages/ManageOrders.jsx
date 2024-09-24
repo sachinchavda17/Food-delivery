@@ -1,31 +1,42 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
-import { deleteDataApi, putDataApi ,getDataApi} from "../utils/api";
-import {toast} from "react-hot-toast"
+import { deleteDataApi, putDataApi, getDataApi } from "../utils/api";
+import { toast } from "react-hot-toast";
+import { StoreContext } from "../utils/StoreContext";
+import loadingSvg from "../assets/loading.svg";
+import { getStatusColor } from "../utils/helpers";
 const OrderManage = () => {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
   const [editOrderId, setEditOrderId] = useState(null);
   const [editData, setEditData] = useState({
     paymentStatus: "",
     orderStatus: "",
   });
 
+  const { token } = useContext(StoreContext);
+
   // Fetch orders from the backend
   useEffect(() => {
     const fetchOrders = async () => {
+      setLoading(true); // Start loading
       try {
-        const response = await getDataApi("/api/orders/list-order");
-        
-        if(!response.success){
-            toast.error(response?.error || "Failed to get Orders.")
+        const response = await getDataApi("/api/orders/list-order", token);
+
+        if (!response.success) {
+          toast.error(response?.error || "Failed to get Orders.");
+        } else {
+          setOrders(response.orders);
         }
-        setOrders(response.orders);
       } catch (error) {
+        toast.error(error.message || "Failed to get Orders.");
         console.error("Failed to fetch orders:", error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
     fetchOrders();
-  }, []);
+  }, [token]);
 
   const handleEdit = (order) => {
     setEditOrderId(order._id);
@@ -37,19 +48,29 @@ const OrderManage = () => {
 
   const handleSaveEdit = async (id) => {
     try {
-      await putDataApi("/api/orders/update-order", {
-        orderId: id,
-        paymentStatus: editData.paymentStatus,
-        orderStatus: editData.orderStatus,
-      });
-      setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order._id === id ? { ...order, ...editData } : order
-        )
+      const response = await putDataApi(
+        "/api/orders/update-order",
+        {
+          orderId: id,
+          paymentStatus: editData.paymentStatus,
+          orderStatus: editData.orderStatus,
+        },
+        token
       );
+      if (response.success) {
+        toast.success(response.message || "Order Updated Successfully");
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order._id === id ? { ...order, ...editData } : order
+          )
+        );
+      } else {
+        toast.error(response.error || "Failed to update order");
+      }
       setEditOrderId(null);
     } catch (error) {
       console.error("Failed to update order:", error);
+      toast.error(error || "Failed to update order");
     }
   };
 
@@ -60,12 +81,29 @@ const OrderManage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteDataApi(`/api/orders/${id}`);
-      setOrders((prevOrders) => prevOrders.filter((order) => order._id !== id));
+      const response = await deleteDataApi(`/api/orders/delete/${id}`, token);
+      if (response.success) {
+        toast.success(response.message || "Order Removed Successfully");
+        setOrders((prevOrders) =>
+          prevOrders.filter((order) => order._id !== id)
+        );
+      } else {
+        toast.error(response.error || "Failed to remove order");
+      }
     } catch (error) {
       console.error("Failed to delete order:", error);
+      toast.error(error.message || "Failed to remove order");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
+        <img src={loadingSvg} alt="Loading" />
+        <span className="ml-2 text-lg">Loading Orders...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="order-manage p-6 w-full bg-background dark:bg-background-dark text-sm">
@@ -112,11 +150,9 @@ const OrderManage = () => {
                   </select>
                 ) : (
                   <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
-                      order.paymentStatus === "Paid"
-                        ? "bg-green-200 text-green-700"
-                        : "bg-red-200 text-red-700"
-                    }`}
+                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getStatusColor(
+                      order.paymentStatus
+                    )}`}
                   >
                     {order.paymentStatus}
                   </span>
@@ -138,15 +174,9 @@ const OrderManage = () => {
                   </select>
                 ) : (
                   <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${
-                      order.orderStatus === "Pending"
-                        ? "bg-yellow-200 text-yellow-700"
-                        : order.orderStatus === "Out for Delivery"
-                        ? "bg-blue-200 text-blue-700"
-                        : order.orderStatus === "Delivered"
-                        ? "bg-green-200 text-green-700"
-                        : "bg-red-200 text-red-700"
-                    }`}
+                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getStatusColor(
+                      order.orderStatus
+                    )} `}
                   >
                     {order.orderStatus}
                   </span>
@@ -158,37 +188,44 @@ const OrderManage = () => {
               <td className="py-2 px-4">
                 {new Date(order.updatedAt).toLocaleString()}
               </td>
-              <td className="py-2 px-4 space-x-2">
-                {editOrderId === order._id && (
+              <td className="py-2 px-4 flex space-x-3">
+                {editOrderId === order._id ? (
                   <>
                     <button
-                      className="text-green-500 mr-2"
+                      className="text-green-500 "
                       onClick={() => handleSaveEdit(order._id)}
                     >
                       <FaSave />
                     </button>
                     <button
-                      className="text-red-500 mr-2"
+                      className="text-red-500 "
                       onClick={handleCancelEdit}
                     >
                       <FaTimes />
                     </button>
+                    <button
+                      className="text-red-600"
+                      onClick={() => handleDelete(order._id)}
+                    >
+                      <FaTrash />
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="text-blue-500"
+                      onClick={() => handleEdit(order)}
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      className="text-red-600"
+                      onClick={() => handleDelete(order._id)}
+                    >
+                      <FaTrash />
+                    </button>
                   </>
                 )}
-                {!editOrderId && (
-                  <button
-                    className="text-blue-500 mr-2"
-                    onClick={() => handleEdit(order)}
-                  >
-                    <FaEdit />
-                  </button>
-                )}
-                <button
-                  className="text-red-600"
-                  onClick={() => handleDelete(order._id)}
-                >
-                  <FaTrash />
-                </button>
               </td>
             </tr>
           ))}

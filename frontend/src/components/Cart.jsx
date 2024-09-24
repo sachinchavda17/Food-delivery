@@ -5,11 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const {
     cartItems,
-    foods,
     removeFromCart,
-    setCartSubTotal,
-    incrementQuantity,
-    decrementQuantity,
     cartSubTotal,
   } = useContext(StoreContext);
   const navigate = useNavigate();
@@ -19,7 +15,6 @@ const Cart = () => {
   return (
     <div className="cart pt-24 p-4">
       {isEmpty ? (
-        // Empty Cart UI
         <div className="empty-cart flex flex-col items-center justify-center h-72 text-center">
           <AiOutlineShoppingCart className="text-6xl text-gray-400 dark:text-gray-600 mb-4" />
           <p className="text-xl text-gray-500 dark:text-ternary-light">
@@ -57,7 +52,6 @@ const Cart = () => {
                       className="text-red-600 cursor-pointer"
                     >
                       Remove
-                      {/* <AiOutlineClose className="text-red-600 cursor-pointer" /> */}
                     </button>
                   </div>
                   <hr className="my-2" />

@@ -1,5 +1,5 @@
 import React from "react";
-import { menu_list } from "../assets/assets"; // Assuming the menu list data is available
+import { menu_list } from "../assets/assets"; 
 
 const ExploreMenu = ({ category, setCategory }) => {
   return (

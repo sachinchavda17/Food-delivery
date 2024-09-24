@@ -24,8 +24,9 @@ export const loginController = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
     });
+    
 
     res.status(201).json({
       success: true,
@@ -83,8 +84,9 @@ export const registerController = async (req, res) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
     });
+    
 
     res.status(201).json({
       success: true,

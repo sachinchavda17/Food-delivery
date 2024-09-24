@@ -3,39 +3,6 @@ import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { deleteDataApi, getDataApi } from "../utils/api";
 import {toast} from "react-hot-toast"
-// Dummy Data
-// const initialItems = [
-//   {
-//     _id: "1",
-//     name: "Margherita Pizza",
-//     desc: "Classic pizza with fresh tomatoes, mozzarella, and basil.",
-//     price: 450,
-//     image: "https://via.placeholder.com/150",
-//     category: "Pizza",
-//     isAvailable: true,
-//     ratings: 4.5,
-//   },
-//   {
-//     _id: "2",
-//     name: "Cheeseburger",
-//     desc: "Grilled beef patty with melted cheddar cheese, lettuce, and tomatoes.",
-//     price: 300,
-//     image: "https://via.placeholder.com/150",
-//     category: "Burger",
-//     isAvailable: true,
-//     ratings: 4.7,
-//   },
-//   {
-//     _id: "3",
-//     name: "Caesar Salad",
-//     desc: "Crispy romaine lettuce with parmesan, croutons, and Caesar dressing.",
-//     price: 250,
-//     image: "https://via.placeholder.com/150",
-//     category: "Salad",
-//     isAvailable: true,
-//     ratings: 4.2,
-//   },
-// ];
 
 const ListItems = () => {
   const [items, setItems] = useState([]);
@@ -48,12 +15,10 @@ const ListItems = () => {
     };
     getData();
   }, []);
-  // Handle Edit
   const handleEdit = (id) => {
     navigate(`/update-item/${id}`);
   };
 
-  // Handle Delete
   const handleDelete = async (id) => {
     try {
       const response = await deleteDataApi(`/api/foods/delete/${id}`);
@@ -82,7 +47,6 @@ const ListItems = () => {
               key={item._id}
               className="flex flex-col lg:flex-row items-center justify-between bg-gray-100 dark:bg-secondary-dark p-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
             >
-              {/* Food Image */}
               <div className="w-full lg:w-1/4 mb-4 lg:mb-0">
                 <img
                   src={item.image}
@@ -91,7 +55,6 @@ const ListItems = () => {
                 />
               </div>
 
-              {/* Food Details */}
               <div className="w-full lg:w-2/4 flex flex-col lg:flex-row lg:justify-between lg:items-center lg:px-6">
                 <div>
                   <h3 className="text-xl font-semibold text-primary dark:text-primary-dark">
@@ -109,7 +72,6 @@ const ListItems = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="w-full lg:w-1/4 flex justify-center lg:justify-end gap-4">
                 <button
                   onClick={() => handleEdit(item._id)}

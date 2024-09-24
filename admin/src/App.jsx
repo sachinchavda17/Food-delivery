@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom";
 import AddItem from "./pages/AddItem";
 import ListItems from "./pages/ListItems";
 import ManageOrders from "./pages/ManageOrders";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/orders" element={<ManageOrders />} />
         </Routes>
       </div>
+      <Toaster />
     </div>
   );
 };
