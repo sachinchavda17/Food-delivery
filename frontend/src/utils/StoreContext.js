@@ -10,6 +10,7 @@ const StoreContextProvider = ({ children }) => {
   const [cartSubTotal, setCartSubTotal] = useState(0);
   const [foods, setFoods] = useState([]);
   const [token, setToken] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     let count = 0;
@@ -72,7 +73,7 @@ const StoreContextProvider = ({ children }) => {
 
   useEffect(() => {
     getCarts();
-  }, []);
+  }, [token]);
 
   const addToCart = async (item, quantity) => {
     try {
@@ -183,6 +184,8 @@ const StoreContextProvider = ({ children }) => {
     setCartCount,
     token,
     setToken,
+    isAdmin,
+    setIsAdmin,
   };
   return (
     <StoreContext.Provider value={contextValue}>

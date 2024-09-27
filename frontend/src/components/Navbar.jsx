@@ -1,25 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  AiOutlineMenu,
-  AiOutlineClose,
-  AiOutlineShoppingCart,
-  AiOutlineSearch,
-} from "react-icons/ai";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { AiOutlineShoppingCart, AiOutlineSearch } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
-import { AiOutlineUser } from "react-icons/ai";
+import { FaUser, FaRegUser } from "react-icons/fa";
+import { TbLogout } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { StoreContext } from "../utils/StoreContext";
-import { FaUser } from "react-icons/fa";
+import { BiFoodMenu } from "react-icons/bi";
+import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
 
 const Navbar = ({ setShowAuth }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const { cartCount, token, setToken } = useContext(StoreContext);
+  const { cartCount, token, setToken ,isAdmin} = useContext(StoreContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     if (darkMode) {
@@ -38,9 +36,8 @@ const Navbar = ({ setShowAuth }) => {
   };
 
   const handleLogout = () => {
-    // removeCookie("foodToken", { path: "/" });
     localStorage.clear("userToken");
-    setToken("")
+    setToken("");
     toast.success("Logged out successfully");
   };
 
@@ -62,27 +59,55 @@ const Navbar = ({ setShowAuth }) => {
         </div>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:border-b-2">
+        <div className="hidden lg:flex items-center space-x-6">
+          <Link
+            to="/"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             Home
           </Link>
-          <Link to="/menu" className="text-sm font-medium hover:border-b-2">
+          <Link
+            to="/menu"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/menu"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             Menu
           </Link>
-          <Link to="/myorders" className="text-sm font-medium hover:border-b-2">
+          <Link
+            to="/myorders"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/myorders"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             Orders
           </Link>
-          <Link to="/about" className="text-sm font-medium hover:border-b-2">
-            About Us
-          </Link>
+          {
+            isAdmin && 
+          
+          <div
+            to="/admin"
+            className={`text-sm font-medium hover:border-b-2 `}
+          >
+           Admin 
+          </div>
+}
         </div>
 
         {/* Icons & Sign-In Button */}
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4 md:space-x-6">
           {/* Search Icon with Dropdown Input */}
           <div className="relative">
             <button
-              className="p-2 rounded-full text-gray-600 dark:text-gray-100"
+              className="hidden md:block p-2 rounded-full text-gray-600 dark:text-gray-100"
               onClick={handleSearchToggle}
             >
               <AiOutlineSearch className="text-2xl" />
@@ -104,8 +129,14 @@ const Navbar = ({ setShowAuth }) => {
           </div>
 
           {/* Cart Icon */}
-          <Link className="relative" to={"/cart"}>
-            <AiOutlineShoppingCart className="text-2xl text-gray-600 dark:text-gray-100" />
+          <Link className="relative hidden md:block" to={"/cart"}>
+            <AiOutlineShoppingCart
+              className={`text-2xl text-gray-600 dark:text-gray-100 ${
+                location.pathname === "/cart"
+                  ? "text-primary dark:text-primary-dark"
+                  : ""
+              } `}
+            />
             {!!cartCount && (
               <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3" />
             )}
@@ -132,23 +163,22 @@ const Navbar = ({ setShowAuth }) => {
               >
                 <FaUser size={20} />
               </div>
+              <div
+                className="flex md:hidden items-center cursor-pointer bg-transparent border border-primary dark:border-primary-dark text-primary p-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition"
+                onClick={handleDropdownToggle}
+              >
+                <TbLogout size={20} />
+              </div>
 
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-10">
+                <div className="absolute right-0 mt-2 w-32 md:w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-10">
                   <Link
                     to="/profile"
-                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="hidden md:block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => setDropdownOpen(false)}
                   >
                     My Profile
                   </Link>
-                  {/* <Link
-                    to="/orders"
-                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    My Orders
-                  </Link> */}
                   <button
                     onClick={() => {
                       handleLogout();
@@ -164,66 +194,71 @@ const Navbar = ({ setShowAuth }) => {
           ) : (
             <div
               onClick={() => setShowAuth(true)}
-              className="hidden md:block bg-transparent border border-primary dark:border-primary-dark text-primary px-4 py-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
+              className="block bg-transparent border border-primary dark:border-primary-dark text-primary px-4 py-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
             >
               Sign In
             </div>
           )}
-
-          {/* Mobile Menu Toggle */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-800 dark:text-gray-100 focus:outline-none"
-            >
-              {isOpen ? (
-                <AiOutlineClose className="text-2xl" />
-              ) : (
-                <AiOutlineMenu className="text-2xl" />
-              )}
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Mobile Links */}
-      <div
-        className={`${
-          isOpen ? "block" : "hidden"
-        } md:hidden bg-gray-50 dark:bg-gray-800`}
-      >
-        <div className="px-4 pt-2 pb-3 space-y-2">
-          <Link
-            to="/"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            Home
-          </Link>
-          <Link
-            to="/menu"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            Menu
-          </Link>
-          <Link
-            to="/cart"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            Cart
-          </Link>
-          <Link
-            to="/myorders"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            Orders
-          </Link>
-          <Link
-            to="/about"
-            className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            About Us
-          </Link>
+      {/* Mobile Bottom Navbar Links */}
+      <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 flex justify-around p-2">
+        <Link
+          to="/"
+          className={`flex flex-col items-center ${
+            location.pathname === "/"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <AiOutlineHome className="text-2xl" />
+          <span className="text-xs">Home</span>
+        </Link>
+
+        <Link
+          to="/cart"
+          className={`flex flex-col items-center ${
+            location.pathname === "/cart"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <AiOutlineShoppingCart className="text-2xl" />
+          <span className="text-xs">Cart</span>
+        </Link>
+        <div
+          className={`flex flex-col items-center ${
+            location.pathname === ""
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <AiOutlineSearch className="text-2xl" />
+          <span className="text-xs">Search</span>
         </div>
+        <Link
+          to="/myorders"
+          className={`flex flex-col items-center ${
+            location.pathname === "/myorders"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <BiFoodMenu className="text-2xl" />
+          <span className="text-xs">Orders</span>
+        </Link>
+        <Link
+          to="/profile"
+          className={`flex flex-col items-center ${
+            location.pathname === "/profile"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <FaRegUser className="text-2xl" />
+          <span className="text-xs">My Profile</span>
+        </Link>
       </div>
     </nav>
   );

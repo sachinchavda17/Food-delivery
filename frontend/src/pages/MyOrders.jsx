@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FaTruck, FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa"; // Importing icons
 import { getDataApi } from "../utils/api"; // Assuming this is your API helper
 import loadingSvg from "../assets/loading.svg"; // Loading icon
 import { StoreContext } from "../utils/StoreContext";
-import OrderDetailsModal from "../components/OrderDetailsModal";
+import OrderDetailsModal from "../model/OrderDetailsModal";
 import { getStatusIcon } from "../utils/helpers";
 
 const MyOrders = () => {

@@ -4,7 +4,7 @@ import { StoreContext } from "../utils/StoreContext";
 import { postDataApi, getDataApi, updateData } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import AddressPopup from "../components/AddAddress";
+import AddressPopup from "../model/AddAddress";
 
 const Checkout = () => {
   const { cartSubTotal, cartItems, token } = useContext(StoreContext);

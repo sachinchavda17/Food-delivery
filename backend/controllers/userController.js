@@ -26,7 +26,6 @@ export const loginController = async (req, res) => {
       sameSite: "Strict",
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
     });
-    
 
     res.status(201).json({
       success: true,
@@ -86,7 +85,6 @@ export const registerController = async (req, res) => {
       sameSite: "Strict",
       maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days in milliseconds
     });
-    
 
     res.status(201).json({
       success: true,
@@ -131,7 +129,7 @@ export const updateUserProfile = async (req, res) => {
       userId,
     } = req.body; // Extract data from the request body
     console.log(req.body);
-    
+
     // Find the user by ID
     const user = await User.findById(userId);
 
@@ -169,7 +167,61 @@ export const updateUserProfile = async (req, res) => {
     // Save the updated user details
     const updatedUser = await user.save();
     console.log(updatedUser);
-    
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ success: false, error: "Server error" });
+  }
+};
+
+export const listUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json({ success: true, users });
+  } catch (error) {
+    console.error("Error listing food:", error);
+    res.status(500).json({ error: "Failed to listing food", success: false });
+  }
+};
+
+export const removeUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByIdAndDelete(id);
+    res.json({ success: true, message: "User Removed" });
+  } catch (error) {
+    console.error("Error user removing:", error);
+    res.status(500).json({ error: "Failed to user removing", success: false });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { name, email, role } = req.body; // Extract data from the request body
+    const { id } = req.params;
+
+    // Find the user by ID
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Update user details
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (role) user.role = role;
+
+    // Save the updated user details
+    const updatedUser = await user.save();
+
     res.status(200).json({
       success: true,
       message: "User updated successfully",

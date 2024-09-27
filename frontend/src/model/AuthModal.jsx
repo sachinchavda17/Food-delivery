@@ -22,7 +22,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
   const [showPassword, setShowPassword] = useState(false);
   // const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { token, setToken } = useContext(StoreContext);
+  const { token, setToken, setIsAdmin } = useContext(StoreContext);
   const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({
@@ -42,14 +42,16 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
 
       const endpoint = isSignupMode ? "/api/user/register" : "/api/user/login";
       const response = await postDataApi(endpoint, formData);
-      
+
       if (!response.success) {
         toast.error(response.error || "An error occurred.");
         return;
       }
+
       setToken(response.token);
       localStorage.setItem("userToken", response.token);
 
+      setIsAdmin(response?.user?.role === "customer" ? false : true);
       toast.success(response.message || "Login successful.");
       setShowAuth(false); // Close modal after submission
     } catch (error) {

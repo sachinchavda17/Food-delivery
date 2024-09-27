@@ -4,11 +4,11 @@ import Navbar from "./components/Navbar"; // Import the Navbar component
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import AppDownload from "./pages/AppDowload";
-import AuthModal from "./components/AuthModal";
+import AuthModal from "./model/AuthModal"
 import { toast, Toaster } from "react-hot-toast";
-import Cart from "./components/Cart"; 
+import Cart from "./pages/Cart"; 
 import Checkout from "./pages/Checkout";
-import VarifyOrder from "./components/VarifyOrder";
+import VarifyOrder from "./model/VarifyOrder";
 import MyOrders from "./pages/MyOrders";
 
 function App() {

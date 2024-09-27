@@ -1,10 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { RiUserSettingsFill } from "react-icons/ri";
-import { FiSun, FiMoon } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { FiSun, FiMoon, FiLogIn } from "react-icons/fi";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { StoreContext } from "../utils/StoreContext"; // Assuming you are using a context for user token
+import toast from "react-hot-toast";
+import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
+import { BiFoodMenu } from "react-icons/bi";
 
-const Navbar = () => {
+const Navbar = ({ setShowAuth }) => {
   const [darkMode, setDarkMode] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { token, setToken } = useContext(StoreContext); // Assuming you have a token in context
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    localStorage.clear("userToken");
+    setToken("");
+    toast.success("Logged out successfully");
+    setDropdownOpen(false);
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -13,30 +28,70 @@ const Navbar = () => {
       document.documentElement.classList.remove("dark");
     }
   }, [darkMode]);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
   return (
-    <div className=" fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
+    <div className="fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
-        <div className="flex flex-col items-center">
+        {/* Logo Section */}
+        <div
+          className="flex flex-col items-center cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <h1 className="text-2xl font-bold text-primary dark:text-primary-dark">
             BiteHub24
           </h1>
           <span>Admin panel</span>
         </div>
 
+        {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-sm font-medium hover:border-b-2">
+          <Link
+            to="/"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             List Items
           </Link>
-          <Link to="/add-item" className="text-sm font-medium hover:border-b-2">
+          <Link
+            to="/add-item"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/add-item"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             Add Item
           </Link>
-          <Link to="/orders" className="text-sm font-medium hover:border-b-2">
+          <Link
+            to="/orders"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/orders"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
             Order Manage
           </Link>
-          
+          <Link
+            to="/users"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/users"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
+            User Manage
+          </Link>
         </div>
 
-        {/* user icon for admin  */}
+        {/* User and Dark Mode Toggle */}
         <div className="flex items-center space-x-6">
           <button
             className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
@@ -48,10 +103,81 @@ const Navbar = () => {
               <FiMoon className="text-xl" />
             )}
           </button>
-          <span className="p-2 rounded-full bg-gray-200 dark:bg-gray-700">
-            <RiUserSettingsFill className="text-xl" />
-          </span>
+
+          {/* User Icon */}
+          {token ? (
+            <div className="relative">
+              <span
+                className="flex items-center cursor-pointer bg-transparent border border-primary dark:border-primary-dark text-primary p-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition"
+                onClick={toggleDropdown}
+              >
+                <RiUserSettingsFill className="text-xl" />
+              </span>
+
+              {/* Dropdown for Logged-In User */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-10">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    My Profile
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full px-4 py-2 text-left text-red-600 dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div
+              onClick={() => setShowAuth(true)}
+              className="block bg-transparent border border-primary dark:border-primary-dark text-primary px-4 py-2 rounded-full hover:text-white hover:bg-primary dark:hover:bg-primary-dark transition cursor-pointer"
+            >
+              Sign In
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed inset-x-0 bottom-0 bg-gray-50 dark:bg-gray-800 md:hidden flex justify-around py-2">
+        <Link
+          to="/"
+          className={`flex flex-col items-center  ${
+            location.pathname === "/"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <AiOutlineHome className="text-2xl" />
+          <span className="text-xs">Home</span>
+        </Link>
+        <Link
+          to="/add-item"
+          className={`flex flex-col items-center ${
+            location.pathname === "/add-item"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <AiOutlineAppstore className="text-2xl" />
+          <span className="text-xs">Add Item</span>
+        </Link>
+        <Link
+          to="/orders"
+          className={`flex flex-col items-center ${
+            location.pathname === "/orders"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <BiFoodMenu className="text-2xl" />
+          <span className="text-xs">Orders</span>
+        </Link>
       </div>
     </div>
   );

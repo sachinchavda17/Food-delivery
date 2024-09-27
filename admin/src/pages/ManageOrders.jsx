@@ -106,7 +106,7 @@ const OrderManage = () => {
   }
 
   return (
-    <div className="order-manage p-6 w-full bg-background dark:bg-background-dark text-sm">
+    <div className="pt-24 order-manage p-6 w-full bg-background dark:bg-background-dark text-sm">
       <h2 className="text-2xl font-bold mb-4">Order Management</h2>
       <table className="w-full text-center bg-white dark:bg-secondary-dark rounded-lg overflow-hidden shadow-md">
         <thead>

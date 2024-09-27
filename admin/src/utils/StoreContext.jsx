@@ -42,7 +42,7 @@ const StoreContextProvider = ({ children }) => {
     const existsToken = localStorage.getItem("userToken");
     if (existsToken) {
       setToken(existsToken);
-      // console.log("Token retrieved:", existsToken); // Debug line
+      console.log("Token retrieved:", existsToken); // Debug line
     }
   }, []);
 
