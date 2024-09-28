@@ -6,6 +6,8 @@ import foodRoute from "./routes/foodRoute.js";
 import userRoute from "./routes/userRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import orderRoute from "./routes/orderRoute.js";
+import menuRoute from "./routes/menuRoute.js";
+import promoCodeRoute from "./routes/promoCodeRoute.js"
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -34,6 +36,8 @@ app.use("/api/foods", foodRoute);
 app.use("/api/user", userRoute);
 app.use("/api/carts", cartRoute);
 app.use("/api/orders", orderRoute);
+app.use("/api/menu", menuRoute);
+app.use("/api/promocode", promoCodeRoute);
 
 app.listen(PORT, () => {
   console.log("Server running successfully! 🎉");

@@ -2,15 +2,31 @@ import React, { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
 import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai"; // Import cart and close icons
 import { useNavigate } from "react-router-dom";
+import { postDataApi } from "../utils/api";
+import { useState } from "react";
+import {toast} from "react-hot-toast"
 const Cart = () => {
-  const {
-    cartItems,
-    removeFromCart,
-    cartSubTotal,
-  } = useContext(StoreContext);
+  const { cartItems, removeFromCart, cartSubTotal } = useContext(StoreContext);
+  const [promoCode, setPromoCode] = useState("");
+  const [discount, setDiscount] = useState(0);
+
   const navigate = useNavigate();
-  console.log(cartSubTotal);
   const isEmpty = cartItems.length === 0;
+
+  const handlePromoCodeSubmit = async (e) => {
+
+    try {
+      const response = await postDataApi("/api/promocode/validate", {
+        code: promoCode,
+      });
+
+      if (response.success) {
+        setDiscount(response.discount);
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to apply promo code.");
+    }
+  };
 
   return (
     <div className="cart pt-24 p-4">
@@ -79,7 +95,9 @@ const Cart = () => {
                   <p>Total</p>
                   <p>
                     &#8377;
-                    {(Number(cartSubTotal) + (cartSubTotal === 0 ? 0 : 2)).toFixed(2)}
+                    {(
+                      Number(cartSubTotal) + (cartSubTotal === 0 ? 0 : 2)
+                    ).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -98,14 +116,23 @@ const Cart = () => {
               </p>
               <div className="cart-promocode-input flex space-x-2">
                 <input
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
                   type="text"
-                  placeholder="Promo Code"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded bg-transparent dark:text-secondary-light"
+                  placeholder="Enter Promo Code"
+                  value={promoCode}
+                  onChange={(e) => setPromoCode(e.target.value)}
+                  required
                 />
-                <button className="bg-black text-white px-4 py-2 rounded">
+                <button
+                  className="bg-black text-white px-4 py-2 rounded"
+                  onClick={() => handlePromoCodeSubmit()}
+                >
                   Submit
                 </button>
               </div>
+              {discount > 0 && (
+                <p className="text-green-500">Discount Applied: {discount}%</p>
+              )}
             </div>
           </div>
         </>

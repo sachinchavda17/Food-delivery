@@ -10,6 +10,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import VarifyOrder from "./model/VarifyOrder";
 import MyOrders from "./pages/MyOrders";
+import Menu from "./pages/Menu";
 
 function App() {
   const [showAuth, setShowAuth] = useState(false);
@@ -27,6 +28,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify" element={<VarifyOrder />} />
           <Route path="/myorders" element={<MyOrders />} />
+          <Route path="/menu" element={<Menu />} />
         </Routes>
       </div>
       <Footer />

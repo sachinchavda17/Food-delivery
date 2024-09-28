@@ -13,6 +13,8 @@ const Checkout = () => {
   const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState();
+ 
+
   const navigate = useNavigate();
   const {
     register,
@@ -35,6 +37,8 @@ const Checkout = () => {
 
     fetchAddresses();
   }, []);
+
+
 
   // Submit order
   const onSubmit = async (data) => {

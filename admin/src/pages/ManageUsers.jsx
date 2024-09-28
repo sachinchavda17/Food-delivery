@@ -50,18 +50,19 @@ const ManageUsers = () => {
 
   const handleDeleteClick = (user) => {
     setSelectedUser(user); // Set the user to be deleted
-    console.log(selectedUser);
     setIsAlertOpen(true); // Open the alert modal
   };
 
-  const handleDeleteConfirm = async (userId) => {
+  const handleDeleteConfirm = async () => {
     try {
-      const response = await deleteDataApi(`/api/user/delete/${selectedUser}`, token);
+      const response = await deleteDataApi(
+        `/api/user/delete/${selectedUser}`,
+        token
+      );
       if (response.success) {
         toast.success("User deleted successfully.");
         setUsers(users.filter((user) => user._id !== selectedUser));
-    setIsAlertOpen(false); // Open the alert modal
-
+        setIsAlertOpen(false); // Open the alert modal
       } else {
         toast.error(response.error || "Failed to delete user.");
       }

@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import { useState } from "react";
 import { StoreContext } from "./utils/StoreContext";
 import ManageUsers from "./pages/ManageUsers";
+import ManageMenu from "./pages/ManageMenu";
 
 const App = () => {
   const [showAuth, setShowAuth] = useState(true);
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="/" element={<ListItems />} />
           <Route path="/orders" element={<ManageOrders />} />
           <Route path="/users" element={<ManageUsers />} />
+          <Route path="/menus" element={<ManageMenu />} />
         </Routes>
       </div>
       <Toaster />

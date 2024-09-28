@@ -29,6 +29,18 @@ const StoreContextProvider = ({ children }) => {
     setCartSubTotal(subTotal.toFixed(2));
   }, [cartItems]);
 
+
+  // const calculateTotal = (cartItems, discount) => {
+  //   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  //   const discountAmount = (subtotal * discount) / 100;
+  //   return subtotal - discountAmount;
+  // };
+  
+  // // Inside your submit order function
+  // const totalAmount = calculateTotal(cartItems, discount);
+  // Proceed with payment processing
+  
+
   const getAllFoods = async () => {
     try {
       const res = await getDataApi("/api/foods/list");

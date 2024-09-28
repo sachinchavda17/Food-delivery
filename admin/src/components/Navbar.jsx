@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
-import { RiUserSettingsFill } from "react-icons/ri";
-import { FiSun, FiMoon, FiLogIn } from "react-icons/fi";
+import { RiUserSettingsFill ,RiFunctionAddFill} from "react-icons/ri";
+import { FiSun, FiMoon } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { StoreContext } from "../utils/StoreContext"; // Assuming you are using a context for user token
 import toast from "react-hot-toast";
-import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
-import { BiFoodMenu } from "react-icons/bi";
+import { GoHomeFill } from "react-icons/go";
+import { BiSolidFoodMenu } from "react-icons/bi";
+import { TfiMenuAlt } from "react-icons/tfi";
+import { FaUsers } from "react-icons/fa6";
 
 const Navbar = ({ setShowAuth }) => {
   const [darkMode, setDarkMode] = useState(false);
@@ -89,6 +91,16 @@ const Navbar = ({ setShowAuth }) => {
           >
             User Manage
           </Link>
+          <Link
+            to="/menus"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/menus"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
+            Menu Manage
+          </Link>
         </div>
 
         {/* User and Dark Mode Toggle */}
@@ -153,7 +165,7 @@ const Navbar = ({ setShowAuth }) => {
               : ""
           } `}
         >
-          <AiOutlineHome className="text-2xl" />
+          <GoHomeFill className="text-2xl" />
           <span className="text-xs">Home</span>
         </Link>
         <Link
@@ -164,7 +176,7 @@ const Navbar = ({ setShowAuth }) => {
               : ""
           } `}
         >
-          <AiOutlineAppstore className="text-2xl" />
+          <RiFunctionAddFill className="text-2xl" />
           <span className="text-xs">Add Item</span>
         </Link>
         <Link
@@ -175,8 +187,30 @@ const Navbar = ({ setShowAuth }) => {
               : ""
           } `}
         >
-          <BiFoodMenu className="text-2xl" />
-          <span className="text-xs">Orders</span>
+          <BiSolidFoodMenu className="text-2xl" />
+          <span className="text-xs">Order's</span>
+        </Link>
+        <Link
+          to="/users"
+          className={`flex flex-col items-center ${
+            location.pathname === "/users"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <FaUsers className="text-2xl" />
+          <span className="text-xs">User's</span>
+        </Link>
+        <Link
+          to="/menus"
+          className={`flex flex-col items-center ${
+            location.pathname === "/menus"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <TfiMenuAlt className="text-2xl" />
+          <span className="text-xs">Menu's</span>
         </Link>
       </div>
     </div>
