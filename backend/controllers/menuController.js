@@ -25,7 +25,7 @@ export const createMenuItem = async (req, res) => {
 
     const newMenuItem = new Menu({ name, image: result.secure_url });
     await newMenuItem.save();
-    console.log("menu saved");
+    console.log("menu saved",newMenuItem);
     res.status(201).json({ success: true, menuItem: newMenuItem });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

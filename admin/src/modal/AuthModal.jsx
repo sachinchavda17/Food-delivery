@@ -55,17 +55,11 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex justify-center items-center bg-gray-800 bg-opacity-90 transition-opacity ${
+      className={`fixed inset-0 z-50 flex justify-center items-center bg-background dark:bg-background-dark bg-opacity-100 transition-opacity ${
         showAuth ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
       <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg w-full relative overflow-y-auto max-h-[90vh]">
-        <button
-          onClick={() => setShowAuth(false)}
-          className="absolute top-5 right-5 text-gray-700 dark:text-gray-200 hover:text-red-500 dark:hover:text-red-400 transition"
-        >
-          <AiOutlineClose className="text-xl" />
-        </button>
         <h2 className="text-2xl font-bold mb-6 text-primary dark:text-primary-dark">
           Login into Your Admin Panel
         </h2>

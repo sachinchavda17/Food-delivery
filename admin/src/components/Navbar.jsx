@@ -61,16 +61,7 @@ const Navbar = ({ setShowAuth }) => {
           >
             List Items
           </Link>
-          <Link
-            to="/add-item"
-            className={`text-sm font-medium hover:border-b-2 ${
-              location.pathname === "/add-item"
-                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
-                : ""
-            } `}
-          >
-            Add Item
-          </Link>
+         
           <Link
             to="/orders"
             className={`text-sm font-medium hover:border-b-2 ${
@@ -168,17 +159,7 @@ const Navbar = ({ setShowAuth }) => {
           <GoHomeFill className="text-2xl" />
           <span className="text-xs">Home</span>
         </Link>
-        <Link
-          to="/add-item"
-          className={`flex flex-col items-center ${
-            location.pathname === "/add-item"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <RiFunctionAddFill className="text-2xl" />
-          <span className="text-xs">Add Item</span>
-        </Link>
+       
         <Link
           to="/orders"
           className={`flex flex-col items-center ${

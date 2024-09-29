@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import AuthModal from "./components/AuthModal";
+import AuthModal from "./modal/AuthModal";
 import { Routes, Route } from "react-router-dom";
 import AddItem from "./pages/AddItem";
 import ListItems from "./pages/ListItems";
@@ -23,7 +23,7 @@ const App = () => {
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
       {showAuth && <AuthModal showAuth={showAuth} setShowAuth={setShowAuth} />}
       <Navbar setShowAuth={setShowAuth} />
-      <div className="app flex bg-background dark:bg-secondary transition-all duration-300 ">
+      <div className="app flex bg-background dark:bg-secondary-dark transition-all duration-300 pt-24 ">
         {/* <Sidebar /> */}
         <Routes>
           <Route path="/add-item" element={<AddItem />} />

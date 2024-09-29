@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { FaEdit, FaTrash, FaSave, FaTimes } from "react-icons/fa";
-import { deleteDataApi, putDataApi, getDataApi } from "../utils/api";
 import { toast } from "react-hot-toast";
-import { StoreContext } from "../utils/StoreContext";
 import loadingSvg from "../assets/loading.svg";
-import { getStatusColor } from "../utils/helpers";
+import { getDataApi, deleteDataApi, putDataApi } from "../utils/api";
+import { StoreContext } from "../utils/StoreContext";
+import OrderRow from "../components/OrderRow";
+
 const OrderManage = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
   const [editOrderId, setEditOrderId] = useState(null);
   const [editData, setEditData] = useState({
     paymentStatus: "",
@@ -16,10 +16,9 @@ const OrderManage = () => {
 
   const { token } = useContext(StoreContext);
 
-  // Fetch orders from the backend
   useEffect(() => {
     const fetchOrders = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
         const response = await getDataApi("/api/orders/list-order", token);
 
@@ -32,7 +31,7 @@ const OrderManage = () => {
         toast.error(error.message || "Failed to get Orders.");
         console.error("Failed to fetch orders:", error);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
     fetchOrders();
@@ -79,13 +78,16 @@ const OrderManage = () => {
     setEditData({ paymentStatus: "", orderStatus: "" });
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (data) => {
     try {
-      const response = await deleteDataApi(`/api/orders/delete/${id}`, token);
+      const response = await deleteDataApi(
+        `/api/orders/delete/${data._id}`,
+        token
+      );
       if (response.success) {
         toast.success(response.message || "Order Removed Successfully");
         setOrders((prevOrders) =>
-          prevOrders.filter((order) => order._id !== id)
+          prevOrders.filter((order) => order._id !== data._id)
         );
       } else {
         toast.error(response.error || "Failed to remove order");
@@ -106,131 +108,47 @@ const OrderManage = () => {
   }
 
   return (
-    <div className="pt-24 order-manage p-6 w-full bg-background dark:bg-background-dark text-sm">
-      <h2 className="text-2xl font-bold mb-4">Order Management</h2>
-      <table className="w-full text-center bg-white dark:bg-secondary-dark rounded-lg overflow-hidden shadow-md">
-        <thead>
-          <tr className="bg-primary dark:bg-primary-dark text-white text-md">
-            <th className="py-2 px-4">Order ID</th>
-            <th className="py-2 px-4">Date</th>
-            <th className="py-2 px-4">Total Amount</th>
-            <th className="py-2 px-4">Payment Status</th>
-            <th className="py-2 px-4">Order Status</th>
-            <th className="py-2 px-4">Address</th>
-            <th className="py-2 px-4">Last Update</th>
-            <th className="py-2 px-4">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr
-              key={order._id}
-              className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-secondary-dark/50"
-            >
-              <td className="py-2 px-4">{order._id}</td>
-              <td className="py-2 px-4">
-                {new Date(order.createdAt).toLocaleDateString()}
-              </td>
-              <td className="py-2 px-4">&#8377;{order.totalPrice}</td>
-              <td className="py-2 px-4">
-                {editOrderId === order._id ? (
-                  <select
-                    value={editData.paymentStatus}
-                    onChange={(e) =>
-                      setEditData({
-                        ...editData,
-                        paymentStatus: e.target.value,
-                      })
-                    }
-                    className="border p-1 rounded"
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Failed">Failed</option>
-                  </select>
-                ) : (
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getStatusColor(
-                      order.paymentStatus
-                    )}`}
-                  >
-                    {order.paymentStatus}
-                  </span>
-                )}
-              </td>
-              <td className="py-2 px-4">
-                {editOrderId === order._id ? (
-                  <select
-                    value={editData.orderStatus}
-                    onChange={(e) =>
-                      setEditData({ ...editData, orderStatus: e.target.value })
-                    }
-                    className="border p-1 rounded"
-                  >
-                    <option value="Pending">Pending</option>
-                    <option value="Out for Delivery">Out for Delivery</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="Cancelled">Cancelled</option>
-                  </select>
-                ) : (
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-semibold rounded ${getStatusColor(
-                      order.orderStatus
-                    )} `}
-                  >
-                    {order.orderStatus}
-                  </span>
-                )}
-              </td>
-              <td className="py-2 px-4">
-                {order.deliveryAddress.street}, {order.deliveryAddress.city}
-              </td>
-              <td className="py-2 px-4">
-                {new Date(order.updatedAt).toLocaleString()}
-              </td>
-              <td className="py-2 px-4 flex space-x-3">
-                {editOrderId === order._id ? (
-                  <>
-                    <button
-                      className="text-green-500 "
-                      onClick={() => handleSaveEdit(order._id)}
-                    >
-                      <FaSave />
-                    </button>
-                    <button
-                      className="text-red-500 "
-                      onClick={handleCancelEdit}
-                    >
-                      <FaTimes />
-                    </button>
-                    <button
-                      className="text-red-600"
-                      onClick={() => handleDelete(order._id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="text-blue-500"
-                      onClick={() => handleEdit(order)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="text-red-600"
-                      onClick={() => handleDelete(order._id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-6 order-manage w-full min-h-screen bg-background dark:bg-secondary-dark text-sm transition-all duration-300">
+      <h2 className="text-2xl font-bold text-center mb-6 dark:text-ternary">
+        Order Management
+      </h2>
+      <div className="container mx-auto overflow-x-auto rounded-lg shadow-lg">
+        {orders.length === 0 ? (
+          <p className="text-center text-secondary dark:text-ternary-dark">
+            No orders available.
+          </p>
+        ) : (
+          <table className="w-full text-center rounded-lg bg-background-light dark:bg-secondary dark:text-ternary-dark shadow-md">
+            <thead>
+              <tr className="bg-primary dark:bg-primary-dark text-ternary ">
+                <th className="py-3 px-4 font-semibold">Order ID</th>
+                <th className="py-3 px-4 font-semibold">Date</th>
+                <th className="py-3 px-4 font-semibold">Total Amount</th>
+                <th className="py-3 px-4 font-semibold">Payment Status</th>
+                <th className="py-3 px-4 font-semibold">Order Status</th>
+                <th className="py-3 px-4 font-semibold">Address</th>
+                <th className="py-3 px-4 font-semibold">Last Update</th>
+                <th className="py-3 px-4 font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <OrderRow
+                  key={order._id}
+                  order={order}
+                  editOrderId={editOrderId}
+                  editData={editData}
+                  setEditData={setEditData}
+                  handleEdit={handleEdit}
+                  handleSaveEdit={handleSaveEdit}
+                  handleCancelEdit={handleCancelEdit}
+                  handleDelete={handleDelete}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

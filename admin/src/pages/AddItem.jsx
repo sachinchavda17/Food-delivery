@@ -8,7 +8,10 @@ import {
   getDataApi,
   putDataApi,
   deleteDataApi,
+  fileUploadHandler,
 } from "../utils/api";
+import { useContext } from "react";
+import { StoreContext } from "../utils/StoreContext";
 
 const AddItem = () => {
   const {
@@ -19,6 +22,7 @@ const AddItem = () => {
     formState: { errors },
   } = useForm();
   const [image, setImage] = useState(null);
+  const { token } = useContext(StoreContext);
   const { id } = useParams(); // Get item ID from URL
   const navigate = useNavigate();
 
@@ -63,18 +67,26 @@ const AddItem = () => {
 
       if (id) {
         // Update existing item
-        const response = await putDataApi(`/api/foods/update/${id}`, formData);
+        const response = await fileUploadHandler(
+          `/api/foods/update/${id}`,
+          "put",
+          formData,
+          token
+        );
         if (response.error) {
-          return toast.error(response.error);
-        }
-        toast.success("Item updated successfully!");
+          return toast.error(response.error || "Failed to Update");
+        } else toast.success(response.message || "Item updated successfully!");
       } else {
         // Add new item
-        const response = await postDataApi("/api/foods/add", formData);
+        const response = await fileUploadHandler(
+          "/api/foods/add",
+          "post",
+          formData,
+          token
+        );
         if (response.error) {
-          return toast.error(response.error);
-        }
-        toast.success("Item added successfully!");
+          return toast.error(response.error || "Failed to Add");
+        } else toast.success(response.message || "Item added successfully!");
       }
 
       resetForm();
@@ -114,7 +126,7 @@ const AddItem = () => {
   };
 
   return (
-    <div className="py-32 bg-white dark:bg-secondary-dark p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
+    <div className="mb-5 bg-background-light dark:bg-secondary p-8 rounded-lg shadow-lg w-full max-w-3xl mx-auto">
       <Toaster />
       <h2 className="text-2xl font-semibold text-primary dark:text-primary-dark mb-6 text-center">
         {id ? "Update Food Item" : "Add New Food Item"}
@@ -182,14 +194,14 @@ const AddItem = () => {
           <div className="flex flex-col">
             <label
               htmlFor="category"
-              className="font-medium text-secondary dark:text-ternary-dark"
+              className="font-medium text-secondary dark:text-ternary-dark dark:bg-secondary"
             >
               Category
             </label>
             <select
               id="category"
               {...register("category", { required: "Category is required" })}
-              className="input-field w-full border p-3 rounded-md bg-transparent dark:text-gray-300 focus:outline-primary dark:focus:outline-primary-dark dark:bg-secondary-dark"
+              className="input-field w-full border p-3 rounded-md bg-transparent dark:text-gray-300 focus:outline-primary dark:focus:outline-primary-dark dark:bg-secondary"
             >
               <option value="">--Select Category--</option>
               <option value="Pizza">Pizza</option>
@@ -208,7 +220,7 @@ const AddItem = () => {
           <div className="flex flex-col">
             <label
               htmlFor="image"
-               // Clickable label
+              // Clickable label
               className="font-medium text-secondary dark:text-ternary-dark cursor-pointer"
             >
               Upload Image

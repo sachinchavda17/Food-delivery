@@ -4,22 +4,30 @@ import cloudinary from "../config/cloudinaryConfig.js";
 
 export const addFood = async (req, res) => {
   try {
+    console.log("Received request to add food:", req.body); // Log the incoming request body
+
     // Check if file is uploaded
     if (!req.files || !req.files.image) {
+      console.log("Error: No image uploaded");
       return res.status(400).json({ error: "No image uploaded" });
     }
+
     const { name, desc, price, category } = req.body;
-    console.log(req.body);
+    console.log("Parsed fields - Name:", name, "Desc:", desc, "Price:", price, "Category:", category); // Log the extracted fields
+
     if (!name || !desc || !price || !category) {
+      console.log("Error: All fields are required.");
       return res.status(400).json({ error: "All fields are required." });
     }
 
     const imageFile = req.files.image;
+    console.log("Image file received:", imageFile); // Log the uploaded image file
 
     // Upload image to Cloudinary
     const result = await cloudinary.v2.uploader.upload(imageFile.tempFilePath, {
       folder: "food_images", // Optional: specify folder in Cloudinary
     });
+    console.log("Image uploaded to Cloudinary:", result.secure_url); // Log the Cloudinary URL
 
     // Create new food item
     const newFood = new Food({
@@ -31,6 +39,7 @@ export const addFood = async (req, res) => {
     });
 
     await newFood.save();
+    console.log("New food item saved:", newFood); // Log the newly created food item
 
     res.status(201).json({
       message: "Food added successfully!",
@@ -42,6 +51,7 @@ export const addFood = async (req, res) => {
     res.status(500).json({ error: "Failed to add food", success: false });
   }
 };
+
 
 // controllers/foodController.js
 export const updateFood = async (req, res) => {

@@ -1,6 +1,6 @@
 // api.js
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-
+import axios from "axios";
 // Generalized GET request
 export const getDataApi = async (endpoint, token) => {
   try {
@@ -44,6 +44,27 @@ export const postDataApi = async (endpoint, data, token) => {
   } catch (error) {
     console.error("Error posting data:", error);
     throw error; // Re-throw error for further handling
+  }
+};
+
+export const fileUploadHandler = async (endpoint, method, formData, token) => {
+  try {
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response =
+      method === "post"
+        ? await axios.post(`${BASE_URL}${endpoint}`, formData, config)
+        : await axios.put(`${BASE_URL}${endpoint}`, formData, config);
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 };
 

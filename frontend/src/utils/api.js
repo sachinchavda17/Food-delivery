@@ -49,6 +49,9 @@ export const postDataApi = async (endpoint, data, token) => {
 };
 
 
+// Generalized POST request
+
+
 // Generalized PUT (Update) request
 export const updateData = async (endpoint, data, token) => {
   try {
