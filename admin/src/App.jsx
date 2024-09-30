@@ -11,6 +11,7 @@ import { useState } from "react";
 import { StoreContext } from "./utils/StoreContext";
 import ManageUsers from "./pages/ManageUsers";
 import ManageMenu from "./pages/ManageMenu";
+import ScrollToTop from "../components/ScrollToTop";
 
 const App = () => {
   const [showAuth, setShowAuth] = useState(true);
@@ -25,14 +26,16 @@ const App = () => {
       <Navbar setShowAuth={setShowAuth} />
       <div className="app flex bg-background dark:bg-secondary-dark transition-all duration-300 pt-24 ">
         {/* <Sidebar /> */}
-        <Routes>
-          <Route path="/add-item" element={<AddItem />} />
-          <Route path="/update-item/:id" element={<AddItem />} />
-          <Route path="/" element={<ListItems />} />
-          <Route path="/orders" element={<ManageOrders />} />
-          <Route path="/users" element={<ManageUsers />} />
-          <Route path="/menus" element={<ManageMenu />} />
-        </Routes>
+        <ScrollToTop>
+          <Routes>
+            <Route path="/add-item" element={<AddItem />} />
+            <Route path="/update-item/:id" element={<AddItem />} />
+            <Route path="/" element={<ListItems />} />
+            <Route path="/orders" element={<ManageOrders />} />
+            <Route path="/users" element={<ManageUsers />} />
+            <Route path="/menus" element={<ManageMenu />} />
+          </Routes>
+        </ScrollToTop>
       </div>
       <Toaster />
     </div>

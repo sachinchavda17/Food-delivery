@@ -53,7 +53,7 @@ const Navbar = ({ setShowAuth }) => {
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <h1 className="text-2xl font-bold text-primary dark:text-primary-dark">
+          <h1 className="text-2xl font-bold text-primary dark:text-primary-dark" style={{fontFamily:"Kalam"}}>
             BiteHub24
           </h1>
         </div>

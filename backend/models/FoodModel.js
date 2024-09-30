@@ -1,4 +1,3 @@
-// models/foodModel.js
 import mongoose from "mongoose";
 
 const foodSchema = new mongoose.Schema(
@@ -6,7 +5,7 @@ const foodSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true, // Removes unnecessary spaces
+      trim: true,
     },
     desc: {
       type: String,
@@ -16,30 +15,30 @@ const foodSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: true,
-      min: 0, // Price should not be negative
+      min: 0,
     },
     image: {
       type: String,
-      required: true, // URL or Cloudinary link for the image
+      required: true,
     },
     category: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      // enum: ["Pizza", "Burger", "Pasta", "Salad", "Dessert", "Drinks", "Other"], // Categories of food
+      ref: "Menu",
     },
     isAvailable: {
       type: Boolean,
-      default: true, // Availability of the food item
+      default: true,
     },
     ratings: {
       type: Number,
       default: 0,
       min: 0,
-      max: 5, // Rating scale from 0 to 5
+      max: 5,
     },
   },
   {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
   }
 );
 

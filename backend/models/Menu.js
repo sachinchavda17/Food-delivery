@@ -11,6 +11,13 @@ const menuSchema = new mongoose.Schema(
       type: String, // URL of the image
       required: true,
     },
+    foods: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Food",
+        default: [],
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -20,7 +20,7 @@ const ItemCard = ({ item, onEdit, onDelete }) => {
             </p>
           </div>
           <p className="text-secondary dark:text-ternary-dark mt-2">
-            Category: {item.category}
+            Category: {item.category.name}
           </p>
 
           <div className="mt-4 flex justify-between gap-4">

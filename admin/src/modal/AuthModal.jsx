@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../utils/StoreContext";
 import { postDataApi } from "../utils/api";
+import { useEffect } from "react";
 const AuthModal = ({ showAuth, setShowAuth }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -52,6 +53,12 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       setIsSubmitting(false);
     }
   };
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
 
   return (
     <div

@@ -2,7 +2,7 @@ import React from "react";
 
 const Colors = () => {
   return (
-    <div className="flex gap-4 py-24 wrap">
+    <div className="flex gap-4 py-24 flex-wrap">
       <div className="w-48 h-48 bg-primary">bg-primary</div>
       <div className="w-48 h-48 bg-primary-light">bg-primary-light</div>
       <div className="w-48 h-48 bg-accent">bg-accent</div>

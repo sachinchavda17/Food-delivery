@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const AddressPopup = ({ onClose, onSave }) => {
@@ -11,6 +11,13 @@ const AddressPopup = ({ onClose, onSave }) => {
   const handleSave = (data) => {
     onSave(data);
   };
+
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
 
   return (
     <div className="address-popup fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">

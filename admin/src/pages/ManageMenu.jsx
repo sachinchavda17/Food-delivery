@@ -71,34 +71,43 @@ const ManageMenu = () => {
     setModalOpen(true);
   };
 
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
+        <img src={loadingSvg} alt="Loading" />
+        <span className="ml-2 text-lg">Loading Menu's...</span>
+      </div>
+    );
+  }
+
   return (
-    <div className="p-6 w-full min-h-screen bg-background dark:bg-secondary-dark transition duration-300">
-      <h2 className="text-2xl font-bold mb-6 text-center dark:text-ternary">
+    <div className="p-6 pb-20 w-full min-h-screen bg-background dark:bg-secondary-dark transition duration-300">
+      <h2 className="text-2xl font-bold mb-6 text-center dark:text-ternary transition-all duration-300">
         Manage Menu
       </h2>
 
-      {loading ? (
-        <div className="flex justify-center items-center">
-          <img src={loadingSvg} alt="Loading..." />
-        </div>
-      ) : (
-        <div className="flex flex-wrap items-center justify-center gap-6">
-          <button
-            className="bg-background-light dark:bg-secondary dark:text-ternary shadow px-4 py-10 rounded flex flex-col items-center"
-            onClick={handleAddNew}
-          >
-            <FaPlus className="mb-2" /> <span>Add New Menu</span>
-          </button>
-          {menuData.map((menu) => (
+      <div className="flex flex-wrap items-center justify-center gap-6 ">
+        <button
+          className="dark:shadow-background-dark dark:text-ternary shadow-md hover:shadow-lg px-4 py-10 rounded flex flex-col items-center transition duration-300"
+          onClick={handleAddNew}
+        >
+          <FaPlus className="mb-2" /> <span>Add New Menu</span>
+        </button>
+        {menuData.length === 0 ? (
+          <p className="text-center text-secondary dark:text-ternary-dark">
+            No Menu available.
+          </p>
+        ) : (
+          menuData.map((menu) => (
             <MenuCard
               key={menu._id}
               menu={menu}
               handleEdit={handleEdit}
               handleDeleteClick={handleDeleteClick}
             />
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
 
       {modalOpen && (
         <ManageModal

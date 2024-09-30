@@ -13,6 +13,13 @@ const VarifyOrder = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
+  
+  useEffect(() => {
     const verifyOrder = async () => {
       try {
         setLoading(true);

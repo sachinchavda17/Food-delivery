@@ -39,7 +39,7 @@ export const placeOrder = async (req, res) => {
       },
       paymentMethod: paymentMethod,
       totalPrice: totalPrice,
-      paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid", // COD payment status starts as Pending
+      paymentStatus: paymentMethod === "cod" ? "Pending" : "Paid", // COD payment status starts as Pending
     });
 
     await newOrder.save();
@@ -114,7 +114,12 @@ export const verifyOrder = async (req, res) => {
           .status(404)
           .json({ success: false, error: "Order not found" });
       }
-      if (order.paymentMethod === "Card" && order.paymentStatus === "Pending") {
+      console.log(order);
+      if (
+        order.paymentMethod === "Card" &&
+        order.paymentStatus === "Pending" &&
+        order.paymentMethod !== "cod"
+      ) {
         await Order.findByIdAndUpdate(orderId, {
           paymentStatus: "Paid",
           orderStatus: "Pending",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { RiUserSettingsFill ,RiFunctionAddFill} from "react-icons/ri";
+import { RiUserSettingsFill, RiFunctionAddFill } from "react-icons/ri";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { StoreContext } from "../utils/StoreContext"; // Assuming you are using a context for user token
@@ -43,7 +43,10 @@ const Navbar = ({ setShowAuth }) => {
           className="flex flex-col items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <h1 className="text-2xl font-bold text-primary dark:text-primary-dark">
+          <h1
+            className="text-2xl font-bold text-primary dark:text-primary-dark "
+            style={{ fontFamily: "Kalam"}}
+          >
             BiteHub24
           </h1>
           <span>Admin panel</span>
@@ -61,7 +64,7 @@ const Navbar = ({ setShowAuth }) => {
           >
             List Items
           </Link>
-         
+
           <Link
             to="/orders"
             className={`text-sm font-medium hover:border-b-2 ${
@@ -159,7 +162,7 @@ const Navbar = ({ setShowAuth }) => {
           <GoHomeFill className="text-2xl" />
           <span className="text-xs">Home</span>
         </Link>
-       
+
         <Link
           to="/orders"
           className={`flex flex-col items-center ${

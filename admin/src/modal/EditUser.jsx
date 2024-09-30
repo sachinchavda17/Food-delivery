@@ -1,9 +1,17 @@
 import React from "react";
+import { useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai"; // Close icon
 
 const EditUser = ({ formData, setFormData, isOpen, onClose, onSubmit }) => {
+  
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
+  
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[90%] max-w-lg relative transform transition-all duration-300 scale-100">

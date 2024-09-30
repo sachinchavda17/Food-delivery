@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   AiOutlineClose,
   AiOutlineEye,
@@ -30,6 +30,12 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       [e.target.name]: e.target.value,
     });
   };
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

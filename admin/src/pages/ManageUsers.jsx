@@ -109,7 +109,7 @@ const ManageUsers = () => {
   }
 
   return (
-    <div className=" w-full p-6 min-h-screen bg-background dark:bg-secondary-dark transition-all duration-300">
+    <div className=" w-full p-6 pb-20 min-h-screen bg-background dark:bg-secondary-dark transition-all duration-300">
       <h2 className="text-2xl font-bold mb-6 text-center dark:text-ternary">
         User Management
       </h2>

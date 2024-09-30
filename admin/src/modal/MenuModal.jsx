@@ -6,6 +6,7 @@ import axios from "axios";
 import { fileUploadHandler } from "../utils/api";
 import { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
+import { useEffect } from "react";
 
 const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   const [name, setName] = useState(currentMenu ? currentMenu.name : "");
@@ -14,6 +15,13 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   const [isDragging, setIsDragging] = useState(false);
   const { token } = useContext(StoreContext);
 
+
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "scroll";
+    };
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !image) {

@@ -108,7 +108,7 @@ const OrderManage = () => {
   }
 
   return (
-    <div className="p-6 order-manage w-full min-h-screen bg-background dark:bg-secondary-dark text-sm transition-all duration-300">
+    <div className="p-6 pb-20 order-manage w-full min-h-screen bg-background dark:bg-secondary-dark text-sm transition-all duration-300">
       <h2 className="text-2xl font-bold text-center mb-6 dark:text-ternary">
         Order Management
       </h2>
