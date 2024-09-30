@@ -11,7 +11,7 @@ import { useState } from "react";
 import { StoreContext } from "./utils/StoreContext";
 import ManageUsers from "./pages/ManageUsers";
 import ManageMenu from "./pages/ManageMenu";
-import ScrollToTop from "../components/ScrollToTop";
+import ScrollToTop from "./components/ScrollToTop";
 
 const App = () => {
   const [showAuth, setShowAuth] = useState(true);

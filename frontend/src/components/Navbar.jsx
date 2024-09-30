@@ -11,20 +11,26 @@ import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
 
 const Navbar = ({ setShowAuth }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Get dark mode preference from localStorage or default to false
+    return localStorage.getItem("darkMode") === "true";
+  });
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
-  const { cartCount, token, setToken ,isAdmin} = useContext(StoreContext);
+  const { cartCount, token, setToken, isAdmin } = useContext(StoreContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
+    // Apply dark mode based on the state
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+    // Save dark mode preference to localStorage
+    localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
   const toggleMenu = () => {
@@ -53,7 +59,10 @@ const Navbar = ({ setShowAuth }) => {
           className="flex items-center cursor-pointer"
           onClick={() => navigate("/")}
         >
-          <h1 className="text-2xl font-bold text-primary dark:text-primary-dark" style={{fontFamily:"Kalam"}}>
+          <h1
+            className="text-2xl font-bold text-primary dark:text-primary-dark"
+            style={{ fontFamily: "Kalam" }}
+          >
             BiteHub24
           </h1>
         </div>
@@ -90,16 +99,11 @@ const Navbar = ({ setShowAuth }) => {
           >
             Orders
           </Link>
-          {
-            isAdmin && 
-          
-          <div
-            to="/admin"
-            className={`text-sm font-medium hover:border-b-2 `}
-          >
-           Admin 
-          </div>
-}
+          {isAdmin && (
+            <div to="/admin" className={`text-sm font-medium hover:border-b-2`}>
+              Admin
+            </div>
+          )}
         </div>
 
         {/* Icons & Sign-In Button */}
@@ -229,36 +233,36 @@ const Navbar = ({ setShowAuth }) => {
         </Link>
         <div
           className={`flex flex-col items-center ${
-            location.pathname === ""
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
+            isOpen ? "text-primary dark:text-primary-dark" : ""
+          }`}
+          onClick={toggleMenu}
         >
-          <AiOutlineSearch className="text-2xl" />
-          <span className="text-xs">Search</span>
+          <AiOutlineAppstore className="text-2xl" />
+          <span className="text-xs">Menu</span>
         </div>
-        <Link
-          to="/myorders"
-          className={`flex flex-col items-center ${
-            location.pathname === "/myorders"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <BiFoodMenu className="text-2xl" />
-          <span className="text-xs">Orders</span>
-        </Link>
-        <Link
-          to="/profile"
-          className={`flex flex-col items-center ${
-            location.pathname === "/profile"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <FaRegUser className="text-2xl" />
-          <span className="text-xs">My Profile</span>
-        </Link>
+        {token ? (
+          <div
+            className={`flex flex-col items-center ${
+              location.pathname === "/profile"
+                ? "text-primary dark:text-primary-dark"
+                : ""
+            } `}
+            onClick={handleDropdownToggle}
+          >
+            <FaRegUser className="text-2xl" />
+            <span className="text-xs">Profile</span>
+          </div>
+        ) : (
+          <div
+            onClick={() => setShowAuth(true)}
+            className={`flex flex-col items-center ${
+              isOpen ? "text-primary dark:text-primary-dark" : ""
+            }`}
+          >
+            <FaUser className="text-2xl" />
+            <span className="text-xs">Sign In</span>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -144,8 +144,9 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="border-t dark:border-secondary-dark border-gray-300 mt-8 md:mt-10 pt-5">
           <p className="text-center text-gray-700 dark:text-ternary-dark text-sm md:text-base">
-            &copy; 2024 BiteHub24.com - All Rights Reserved
+            &copy; 2024 BiteHub24.com - Created by <span className="text-primary hover:text-accent cursor-pointer border-b border-primary-light">Sachin Chavda</span> 
           </p>
+          
         </div>
       </div>
     </footer>
