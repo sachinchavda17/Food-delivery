@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import { assets } from "../assets/assets";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { StoreContext } from "../utils/StoreContext";
 import Rating from "./Rating";
@@ -11,7 +10,7 @@ const FoodItem = ({ item }) => {
   const currentCartItem = cartItems.find(
     (cartItem) => cartItem.food._id === item._id
   );
-  
+
   const quantity = currentCartItem ? currentCartItem.quantity : 0;
   return (
     <div className="food-item w-full max-w-sm m-auto rounded-lg shadow-md dark:shadow-background-dark transition duration-300 animate-fadeIn">
@@ -22,14 +21,17 @@ const FoodItem = ({ item }) => {
           className="food-item-img w-full transition duration-300 hover:scale-105"
         />
         {!quantity ? (
-          <AiOutlinePlusCircle
-            className="add w-9 h-9 absolute bottom-3.5 right-3.5 cursor-pointer rounded-full text-green-500 hover:text-green-600 bg-green-200"
+          <div
+            className="add flex items-center gap-3 absolute px-3 py-2  bottom-3.5 right-3.5 cursor-pointer rounded-full text-green-500 hover:text-green-600 bg-green-200"
             onClick={() => addToCart(item, 1)}
-          />
+          >
+            <AiOutlinePlusCircle />
+            <span>Add to Cart</span>
+          </div>
         ) : (
-          <div className="food-item-counter flex items-center gap-2 p-1.5 absolute bottom-3.5 right-3.5 bg-background rounded-full">
+          <div className="food-item-counter flex items-center gap-2 p-2 absolute bottom-3.5 right-3.5 bg-background rounded-full">
             <AiOutlineMinusCircle
-              className="remove w-6 h-6 cursor-pointer text-primary hover:text-accent transition duration-300"
+              className="remove w-7 h-7 cursor-pointer text-primary hover:text-accent transition duration-300"
               onClick={() => {
                 quantity === 1
                   ? removeFromCart(item._id)
@@ -38,7 +40,7 @@ const FoodItem = ({ item }) => {
             />
             <span className="text-black font-medium">{quantity}</span>
             <AiOutlinePlusCircle
-              className="add w-6 h-6 cursor-pointer text-green-500 hover:text-green-600 transition duration-300"
+              className="add w-7 h-7 cursor-pointer text-green-500 hover:text-green-600 transition duration-300"
               onClick={() => updateCartItemQuantity(item._id, "increase")}
             />
           </div>

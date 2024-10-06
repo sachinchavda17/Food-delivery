@@ -15,7 +15,18 @@ const OrderDetailsModal = ({ order, isOpen, onClose }) => {
         <h2 className="text-2xl font-bold mb-4 dark:text-gray-100">
           Order Details
         </h2>
-        <p className="dark:text-gray-300 mb-2">Order ID: #{order._id}</p>
+        <p className="dark:text-gray-300 mb-2 ">Order ID: #{order._id}</p>
+        <div className="mb-2 dark:text-ternary">Items:
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {order.items.map((item) => (
+              <img
+                src={item.food.image}
+                alt={item.food.name}
+                className="h-20 w-20 rounded-lg"
+              />
+            ))}
+          </div>
+        </div>
         <p className="dark:text-gray-300 mb-2">
           Total: &#8377; {order.totalPrice.toFixed(2)}
         </p>

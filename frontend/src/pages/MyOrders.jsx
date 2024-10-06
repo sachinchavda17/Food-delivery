@@ -3,7 +3,7 @@ import { getDataApi } from "../utils/api"; // Assuming this is your API helper
 import loadingSvg from "../assets/loading.svg"; // Loading icon
 import { StoreContext } from "../utils/StoreContext";
 import OrderDetailsModal from "../model/OrderDetailsModal";
-import { getStatusIcon } from "../utils/helpers";
+import { getStatusColor, getStatusIcon } from "../utils/helpers";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -56,15 +56,18 @@ const MyOrders = () => {
               <div className="absolute top-4 right-4">
                 {getStatusIcon(order.orderStatus)}
               </div>
-              <h3 className="text-xl font-semibold mb-2 dark:text-gray-200">
+              <h3 className="text-lg box-border overflow-hidden font-semibold mb-2 dark:text-gray-200">
                 Order ID: #{order._id}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 mb-2">
                 Total: ${order.totalPrice.toFixed(2)}
               </p>
 
-              <p className="text-gray-500 dark:text-gray-400 mb-2">
-                Status: {order.orderStatus}
+              <p className={`text-gray-500 dark:text-gray-400 mb-2 `}>
+                Status:{" "}
+                <span className={`${getStatusColor(order.orderStatus)} inline-block px-2 py-1 text-xs font-semibold rounded`}>
+                  {order.orderStatus}
+                </span>
               </p>
 
               <button
