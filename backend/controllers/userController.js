@@ -101,7 +101,7 @@ export const registerController = async (req, res) => {
 export const userProfileController = async (req, res) => {
   try {
     const { userId } = req.body;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("orders").exec();
     if (!user) {
       res.status(500).json({
         error: "User doesn't exixts please enter valid user id",

@@ -10,7 +10,6 @@ import { BiFoodMenu } from "react-icons/bi";
 import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
 
 const Navbar = ({ setShowAuth }) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(() => {
     // Get dark mode preference from localStorage or default to false
     return localStorage.getItem("darkMode") === "true";
@@ -32,10 +31,6 @@ const Navbar = ({ setShowAuth }) => {
     // Save dark mode preference to localStorage
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
 
   const handleSearchToggle = () => {
     setSearchOpen(!searchOpen);
@@ -100,7 +95,10 @@ const Navbar = ({ setShowAuth }) => {
             Orders
           </Link>
           {isAdmin && (
-            <div to="/admin" className={`text-sm font-medium hover:border-b-2`}>
+            <div
+              to="/admin"
+              className={`text-sm font-medium hover:border-b-2 `}
+            >
               Admin
             </div>
           )}
@@ -233,36 +231,36 @@ const Navbar = ({ setShowAuth }) => {
         </Link>
         <div
           className={`flex flex-col items-center ${
-            isOpen ? "text-primary dark:text-primary-dark" : ""
-          }`}
-          onClick={toggleMenu}
+            location.pathname === ""
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
         >
-          <AiOutlineAppstore className="text-2xl" />
-          <span className="text-xs">Menu</span>
+          <AiOutlineSearch className="text-2xl" />
+          <span className="text-xs">Search</span>
         </div>
-        {token ? (
-          <div
-            className={`flex flex-col items-center ${
-              location.pathname === "/profile"
-                ? "text-primary dark:text-primary-dark"
-                : ""
-            } `}
-            onClick={handleDropdownToggle}
-          >
-            <FaRegUser className="text-2xl" />
-            <span className="text-xs">Profile</span>
-          </div>
-        ) : (
-          <div
-            onClick={() => setShowAuth(true)}
-            className={`flex flex-col items-center ${
-              isOpen ? "text-primary dark:text-primary-dark" : ""
-            }`}
-          >
-            <FaUser className="text-2xl" />
-            <span className="text-xs">Sign In</span>
-          </div>
-        )}
+        <Link
+          to="/myorders"
+          className={`flex flex-col items-center ${
+            location.pathname === "/myorders"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <BiFoodMenu className="text-2xl" />
+          <span className="text-xs">Orders</span>
+        </Link>
+        <Link
+          to="/profile"
+          className={`flex flex-col items-center ${
+            location.pathname === "/profile"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <FaRegUser className="text-2xl" />
+          <span className="text-xs">My Profile</span>
+        </Link>
       </div>
     </nav>
   );

@@ -13,6 +13,7 @@ import MyOrders from "./pages/MyOrders";
 import Menu from "./pages/Menu";
 import Colors from "./components/Colors";
 import ScrollToTop from "./components/ScrollToTop";
+import Profile from "./pages/Profile";
 
 function App() {
   const [showAuth, setShowAuth] = useState(false);
@@ -31,6 +32,7 @@ function App() {
             <Route path="/myorders" element={<MyOrders />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/color" element={<Colors />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </ScrollToTop>
       </div>
