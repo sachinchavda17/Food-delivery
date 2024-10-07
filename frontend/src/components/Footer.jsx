@@ -79,10 +79,10 @@ const Footer = () => {
                   Menu
                 </h2>
                 <ul className="space-y-2">
-                  {menuData.slice(0, 5).map((menu) => (
+                  {menuData.slice(0, 5).map((menu,id) => (
                     <li
                       className="hover:text-primary dark:hover:text-primary-dark cursor-pointer"
-                      key={menu.id}
+                      key={id}
                     >
                       {menu.name}
                     </li>

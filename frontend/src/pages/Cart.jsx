@@ -1,33 +1,40 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StoreContext } from "../utils/StoreContext";
-import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai"; // Import cart and close icons
+import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { postDataApi } from "../utils/api";
-import { useState } from "react";
 import { toast } from "react-hot-toast";
 
 const Cart = () => {
-  const { cartItems, removeFromCart, cartSubTotal } = useContext(StoreContext);
+  const {
+    cartItems,
+    removeFromCart,
+    cartSubTotal,
+    discount,
+    setDiscount,
+    discountedSubTotal,
+    setDiscountedSubTotal,
+  } = useContext(StoreContext);
   const [promoCode, setPromoCode] = useState("");
-  const [discount, setDiscount] = useState(0);
 
   const navigate = useNavigate();
   const isEmpty = cartItems.length === 0;
 
-  const handlePromoCodeSubmit = async () => {
+  const handlePromoCodeSubmit = async (e) => {
+    e.preventDefault();
     try {
+      if (!promoCode) return toast.error("Please Enter promocode");
       const response = await postDataApi("/api/promocode/validate", {
         code: promoCode,
       });
-
       if (response.success) {
         setDiscount(response.discount);
         toast.success("Promo code applied successfully!");
       } else {
-        toast.error("Invalid promo code.");
+        toast.error("Invalid promo code");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to apply promo code.");
+      toast.error(error.message || "Failed to apply promo code");
     }
   };
 
@@ -69,7 +76,9 @@ const Cart = () => {
                       />
                     </td>
                     <td className="sm:p-4 px-2 py-3">{itemData.food?.name}</td>
-                    <td className="sm:p-4 px-2 py-3">&#8377;{itemData.food?.price}</td>
+                    <td className="sm:p-4 px-2 py-3">
+                      &#8377;{itemData.food?.price}
+                    </td>
                     <td className="sm:p-4 px-2 py-3">{itemData.quantity}</td>
                     <td className="sm:p-4 px-2 py-3">
                       &#8377;{itemData.food?.price * itemData.quantity}
@@ -95,9 +104,9 @@ const Cart = () => {
           </div>
 
           {/* Cart Totals and Promo Code Side by Side */}
-          <div className="cart-bottom mt-8 grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="cart-bottom my-8 grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Cart Totals Section */}
-            <div className="cart-total text-lg font-semibold dark:text-ternary-light border p-6 rounded-lg shadow-lg">
+            <div className="cart-total text-lg font-semibold dark:text-ternary-light p-6 rounded-lg shadow-lg">
               <h2 className="text-2xl mb-4">Cart Totals</h2>
               <div className="space-y-4">
                 <div className="flex justify-between text-gray-700 dark:text-gray-200">
@@ -108,18 +117,29 @@ const Cart = () => {
                   <p>Delivery Fee</p>
                   <p>&#8377; 2</p>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-gray-700 dark:text-gray-200">
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Discount Applied: {discount}%
+                    </p>
+                    <p>-&#8377;{discountedSubTotal}</p>
+                  </div>
+                )}
                 <div className="flex justify-between font-bold text-primary dark:text-primary-light">
                   <p>Total</p>
                   <p>
                     &#8377;
-                    {(
-                      Number(cartSubTotal) + (cartSubTotal === 0 ? 0 : 2)
-                    ).toFixed(2)}
+                    {discountedSubTotal
+                      ? (
+                          Number(cartSubTotal - discountedSubTotal) +
+                          (Number(discountedSubTotal) === 0 ? 0 : 2)
+                        ).toFixed(2)
+                      : (
+                          Number(cartSubTotal) +
+                          (Number(cartSubTotal) === 0 ? 0 : 2)
+                        ).toFixed(2)}
                   </p>
                 </div>
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  {discount > 0 && `Discount Applied: ${discount}%`}
-                </p>
               </div>
               <button
                 onClick={() => navigate("/checkout")}
@@ -130,26 +150,27 @@ const Cart = () => {
             </div>
 
             {/* Promo Code Section */}
-            <div className="cart-promocode border p-6 rounded-lg shadow-lg">
+            <div className="cart-promocode p-6 rounded-lg shadow-lg">
               <p className="mb-2 text-gray-600 dark:text-ternary-light">
                 If you have a promo code, enter it here:
               </p>
-              <div className="cart-promocode-input flex space-x-2">
-                <input
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
-                  type="text"
-                  placeholder="Enter Promo Code"
-                  value={promoCode}
-                  onChange={(e) => setPromoCode(e.target.value)}
-                  required
-                />
-                <button
-                  className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-300 transform hover:scale-105"
-                  onClick={handlePromoCodeSubmit}
-                >
-                  Submit
-                </button>
-              </div>
+              <form onSubmit={handlePromoCodeSubmit}>
+                <div className="cart-promocode-input flex space-x-2">
+                  <input
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
+                    type="text"
+                    placeholder="Enter Promo Code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                  />
+                  <button
+                    className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-300 transform hover:scale-105"
+                    type="submit"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </form>
               {discount > 0 && (
                 <p className="text-green-500 mt-2">
                   Discount Applied: {discount}%

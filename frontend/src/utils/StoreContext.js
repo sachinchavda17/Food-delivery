@@ -7,7 +7,9 @@ export const StoreContext = createContext();
 const StoreContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartCount, setCartCount] = useState(0);
+  const [discount, setDiscount] = useState(0);
   const [cartSubTotal, setCartSubTotal] = useState(0);
+  const [discountedSubTotal, setDiscountedSubTotal] = useState(0);
   const [foods, setFoods] = useState([]);
   const [token, setToken] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
@@ -17,9 +19,7 @@ const StoreContextProvider = ({ children }) => {
     let subTotal = 0;
 
     cartItems.forEach((item) => {
-      console.log(item);
       if (item?.food?.price) {
-        // Check if item and item.price are defined
         count += item.quantity;
         subTotal += item.food.price * item.quantity;
       }
@@ -27,19 +27,11 @@ const StoreContextProvider = ({ children }) => {
 
     setCartCount(count);
     setCartSubTotal(subTotal.toFixed(2));
-  }, [cartItems]);
-
-
-  // const calculateTotal = (cartItems, discount) => {
-  //   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  //   const discountAmount = (subtotal * discount) / 100;
-  //   return subtotal - discountAmount;
-  // };
-  
-  // // Inside your submit order function
-  // const totalAmount = calculateTotal(cartItems, discount);
-  // Proceed with payment processing
-  
+    if (discount) {
+      const discountedPrice = ((subTotal * discount) / 100).toFixed(2);
+      setDiscountedSubTotal(discountedPrice);
+    }
+  }, [cartItems, discount]);
 
   const getAllFoods = async () => {
     try {
@@ -55,20 +47,17 @@ const StoreContextProvider = ({ children }) => {
     const existsToken = localStorage.getItem("userToken");
     if (existsToken) {
       setToken(existsToken);
-      // console.log("Token retrieved:", existsToken); // Debug line
     }
   }, []);
 
   const getCarts = async () => {
     try {
-      // Ensure the token is retrieved and set before making the API call
       const existsToken = localStorage.getItem("userToken");
       if (existsToken) {
         setToken(existsToken);
-        // Wait until the state is updated (not recommended generally, but for debugging it can help)
         await new Promise((resolve) => setTimeout(resolve, 100));
 
-        const res = await getDataApi("/api/carts/get", existsToken); // Use existsToken directly
+        const res = await getDataApi("/api/carts/get", existsToken);
         if (res.success) {
           setCartItems(res.cart);
         } else {
@@ -78,7 +67,6 @@ const StoreContextProvider = ({ children }) => {
         toast.error("Please login to check your carts.");
       }
     } catch (error) {
-      // console.error("Error fetching carts:", error);
       toast.error("Failed to fetch carts");
     }
   };
@@ -198,6 +186,10 @@ const StoreContextProvider = ({ children }) => {
     setToken,
     isAdmin,
     setIsAdmin,
+    discount,
+    setDiscount,
+    discountedSubTotal,
+    setDiscountedSubTotal,
   };
   return (
     <StoreContext.Provider value={contextValue}>
