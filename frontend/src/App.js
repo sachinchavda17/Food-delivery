@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar"; // Import the Navbar component
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
-import AppDownload from "./pages/AppDowload";
 import AuthModal from "./model/AuthModal";
 import { toast, Toaster } from "react-hot-toast";
 import Cart from "./pages/Cart";
@@ -11,9 +10,9 @@ import Checkout from "./pages/Checkout";
 import VarifyOrder from "./model/VarifyOrder";
 import MyOrders from "./pages/MyOrders";
 import Menu from "./pages/Menu";
-import Colors from "./components/Colors";
 import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const [showAuth, setShowAuth] = useState(false);
@@ -25,14 +24,13 @@ function App() {
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/app-download" element={<AppDownload />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/verify" element={<VarifyOrder />} />
             <Route path="/myorders" element={<MyOrders />} />
             <Route path="/menu" element={<Menu />} />
-            <Route path="/color" element={<Colors />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </ScrollToTop>
       </div>

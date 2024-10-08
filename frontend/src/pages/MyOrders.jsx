@@ -60,7 +60,7 @@ const MyOrders = () => {
                 Order ID: #{order._id}
               </h3>
               <p className="text-gray-700 dark:text-gray-300 mb-2">
-                Total: ${order.totalPrice.toFixed(2)}
+                Total: &#8377;{order.totalPrice.toFixed(2)}
               </p>
 
               <p className={`text-gray-500 dark:text-gray-400 mb-2 `}>

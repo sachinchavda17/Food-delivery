@@ -26,9 +26,9 @@ const StoreContextProvider = ({ children }) => {
     });
 
     setCartCount(count);
-    setCartSubTotal(subTotal.toFixed(2));
+    setCartSubTotal(Math.round(subTotal));
     if (discount) {
-      const discountedPrice = ((subTotal * discount) / 100).toFixed(2);
+      const discountedPrice = Math.round((subTotal * discount) / 100);
       setDiscountedSubTotal(discountedPrice);
     }
   }, [cartItems, discount]);

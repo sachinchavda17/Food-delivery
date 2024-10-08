@@ -7,13 +7,13 @@ import { toast } from "react-hot-toast";
 import AddressPopup from "../model/AddAddress";
 
 const Checkout = () => {
-  const { cartSubTotal, cartItems, token } = useContext(StoreContext);
+  const { cartSubTotal, cartItems, token, discountedSubTotal, discount } =
+    useContext(StoreContext);
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState();
- 
 
   const navigate = useNavigate();
   const {
@@ -38,8 +38,6 @@ const Checkout = () => {
     fetchAddresses();
   }, []);
 
-
-
   // Submit order
   const onSubmit = async (data) => {
     setLoading(true);
@@ -55,7 +53,8 @@ const Checkout = () => {
           postalCode: data.zip,
           country: data.country,
         },
-        paymentMethod: paymentMethod,
+        paymentMethod,
+        discount,
       };
       console.log(orderData);
       const response = await postDataApi("/api/orders/place", orderData, token);
@@ -179,7 +178,9 @@ const Checkout = () => {
 
         {/* Right Side: Cart Totals */}
         <div className="checkout-right w-full lg:max-w-1/3 bg-light p-6 rounded-lg">
-          <h2 className="text-2xl font-bold mb-5 dark:text-background">Cart Totals</h2>
+          <h2 className="text-2xl font-bold mb-5 dark:text-background">
+            Cart Totals
+          </h2>
           <div className="space-y-4 dark:text-ternary-light">
             <div className="flex justify-between">
               <p>Subtotal</p>
@@ -189,14 +190,28 @@ const Checkout = () => {
               <p>Delivery Fee</p>
               <p>{cartSubTotal === 0 ? 0 : 2}</p>
             </div>
+            {discount > 0 && (
+              <div className="flex justify-between text-gray-700 dark:text-gray-200">
+                <p className="text-sm text-green-600 dark:text-green-400">
+                  Discount Applied: {discount}%
+                </p>
+                <p>-&#8377;{discountedSubTotal}</p>
+              </div>
+            )}
             <hr className="my-2" />
             <div className="flex justify-between font-bold">
               <p>Total</p>
               <p>
                 &#8377;
-                {(Number(cartSubTotal) + (cartSubTotal === 0 ? 0 : 2)).toFixed(
-                  2
-                )}
+                {discountedSubTotal
+                  ? (
+                      Number(cartSubTotal - discountedSubTotal) +
+                      (Number(discountedSubTotal) === 0 ? 0 : 2)
+                    ).toFixed(2)
+                  : (
+                      Number(cartSubTotal) +
+                      (Number(cartSubTotal) === 0 ? 0 : 2)
+                    ).toFixed(2)}
               </p>
             </div>
           </div>

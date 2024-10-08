@@ -8,7 +8,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 export const placeOrder = async (req, res) => {
   try {
     const frontend_url = process.env.FRONTEND_URL;
-    const { userId, items, deliveryAddress, paymentMethod } = req.body;
+    const { userId, items, deliveryAddress, paymentMethod, discount } =
+      req.body;
 
     const itemDetails = await Promise.all(
       items.map(async (item) => {
@@ -22,8 +23,16 @@ export const placeOrder = async (req, res) => {
       })
     );
 
-    const totalPrice =
+    // const totalPrice =
+    //   itemDetails.reduce((total, item) => total + item.price, 0) + 2; // +2 for delivery charges
+
+    let totalPrice =
       itemDetails.reduce((total, item) => total + item.price, 0) + 2; // +2 for delivery charges
+
+    // Apply discount if available
+    if (discount) {
+      totalPrice -= (totalPrice * discount) / 100; // Assuming discount is a percentage
+    }
 
     const newOrder = new Order({
       user: userId,
