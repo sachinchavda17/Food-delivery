@@ -32,6 +32,7 @@ export const placeOrder = async (req, res) => {
     // Apply discount if available
     if (discount) {
       totalPrice -= (totalPrice * discount) / 100; // Assuming discount is a percentage
+      totalPrice += 2;
     }
 
     const newOrder = new Order({
@@ -56,7 +57,7 @@ export const placeOrder = async (req, res) => {
     // Update user orders and clear cart
     await User.findByIdAndUpdate(userId, {
       $push: { orders: { orderId: newOrder._id } },
-      carts: [],
+      carts: [], // Remove this line
     });
 
     if (paymentMethod === "COD" || paymentMethod === "cod") {
@@ -69,18 +70,24 @@ export const placeOrder = async (req, res) => {
       });
     } else {
       // Prepare Stripe payment session for card payments
-      const line_items = itemDetails.map((item) => ({
-        price_data: {
-          currency: "inr",
-          product_data: {
-            name: item?.name || "Unknown Item", // Provide a name for each product
+      const line_items = itemDetails.map((item) => {
+        let itemPrice = item.price; // Original price of the item
+        if (discount) {
+          itemPrice = Math.round(itemPrice - (item.price * discount) / 100); // Apply discount
+        }
+        return {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: item?.name || "Unknown Item", // Provide a name for each product
+            },
+            unit_amount: Math.round((itemPrice / item.quantity) * 100), // Divide by quantity to get price per item again (in smallest unit)
           },
-          unit_amount: item.price * 100, // Price in smallest currency unit
-        },
-        quantity: item.quantity,
-      }));
+          quantity: item.quantity,
+        };
+      });
 
-      // Add delivery charges
+      // Add delivery charges (unchanged)
       line_items.push({
         price_data: {
           currency: "inr",
@@ -123,7 +130,6 @@ export const verifyOrder = async (req, res) => {
           .status(404)
           .json({ success: false, error: "Order not found" });
       }
-      console.log(order);
       if (
         order.paymentMethod === "Card" &&
         order.paymentStatus === "Pending" &&

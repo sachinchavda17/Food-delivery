@@ -14,24 +14,29 @@ const StoreContextProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
-  useEffect(() => {
-    let count = 0;
-    let subTotal = 0;
+useEffect(() => {
+  let count = 0;
+  let subTotal = 0;
+  let discountAmount = 0;
 
-    cartItems.forEach((item) => {
-      if (item?.food?.price) {
-        count += item.quantity;
-        subTotal += item.food.price * item.quantity;
+  cartItems.forEach((item) => {
+    if (item?.food?.price) {
+      count += item.quantity;
+      subTotal += item.food.price * item.quantity; // Calculate original price
+
+      if (discount) {
+        discountAmount += (item.food.price * discount / 100) * item.quantity; // Calculate discount amount
       }
-    });
-
-    setCartCount(count);
-    setCartSubTotal(Math.round(subTotal));
-    if (discount) {
-      const discountedPrice = Math.round((subTotal * discount) / 100);
-      setDiscountedSubTotal(discountedPrice);
     }
-  }, [cartItems, discount]);
+  });
+
+
+  setCartCount(count);
+  setCartSubTotal(Math.round(subTotal)); // Set original subtotal before discount
+  setDiscountedSubTotal(Math.round(discountAmount)); // Set final subtotal after discount
+}, [cartItems, discount]);
+
+  
 
   const getAllFoods = async () => {
     try {

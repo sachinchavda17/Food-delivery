@@ -193,7 +193,7 @@ const Checkout = () => {
             {discount > 0 && (
               <div className="flex justify-between text-gray-700 dark:text-gray-200">
                 <p className="text-sm text-green-600 dark:text-green-400">
-                  Discount Applied: {discount}%
+                  Discount Applied: {discount}% on each items.
                 </p>
                 <p>-&#8377;{discountedSubTotal}</p>
               </div>
