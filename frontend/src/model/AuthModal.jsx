@@ -3,13 +3,13 @@ import {
   AiOutlineClose,
   AiOutlineEye,
   AiOutlineEyeInvisible,
+  AiOutlineCopy,
 } from "react-icons/ai";
-import { toast, Toaster } from "react-hot-toast";
-// import { useCookies } from "react-cookie";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-// import Cookies from "js-cookie";
 import { StoreContext } from "../utils/StoreContext";
 import { postDataApi } from "../utils/api";
+
 const AuthModal = ({ showAuth, setShowAuth }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -20,16 +20,16 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
 
   const [isSignupMode, setIsSignupMode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  // const [cookies, setCookie, removeCookie] = useCookies(["foodToken"]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { token, setToken, setIsAdmin } = useContext(StoreContext);
-  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => {
@@ -55,9 +55,13 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       }
 
       setToken(response.token);
-      localStorage.setItem("userToken", response.token);
-
-      setIsAdmin(response?.user?.role === "customer" ? false : true);
+      if (response?.user?.role === "customer") {
+        localStorage.setItem("userToken", response.token);
+        setIsAdmin(false);
+      } else {
+        localStorage.setItem("adminToken", response.token);
+        setIsAdmin(true);
+      }
       toast.success(response.message || "Login successful.");
       setShowAuth(false); // Close modal after submission
     } catch (error) {
@@ -68,6 +72,14 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  // Function to copy test user credentials
+  const handleCopy = () => {
+    const testUserCredentials = "Email: test@gmail.com\nPassword: 123456789";
+    navigator.clipboard.writeText(testUserCredentials);
+    setFormData({ email: "test@gmail.com", password: "123456789" });
+    toast.success("Test user credentials copied to clipboard!");
   };
 
   return (
@@ -97,7 +109,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
+                className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 dark:text-ternary rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
               />
             </div>
           )}
@@ -110,7 +122,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
+              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 dark:text-ternary rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
             />
           </div>
           <div className="mb-6 relative">
@@ -122,15 +134,15 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10" // Add padding to right for eye icon
+              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 dark:text-ternary rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 top-6 text-3xl  right-2 flex items-center justify-center"
+              className="absolute inset-y-0 top-6 text-3xl right-2 flex items-center justify-center"
             >
               {showPassword ? (
-                <AiOutlineEyeInvisible className="text-gray-400 dark:text-gray-600 " />
+                <AiOutlineEyeInvisible className="text-gray-400 dark:text-gray-600" />
               ) : (
                 <AiOutlineEye className="text-gray-400 dark:text-gray-600" />
               )}
@@ -146,7 +158,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10" // Add padding to right for eye icon
+                className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 dark:text-ternary rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10"
               />
               <button
                 type="button"
@@ -173,6 +185,25 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
               : "Log In"}
           </button>
         </form>
+
+        {/* Test User Information */}
+        <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 text-center">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            Test User Information
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">
+            <strong>Email:</strong> test@gmail.com
+          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <strong>Password:</strong> 123456789
+          </p>
+          <button
+            onClick={handleCopy}
+            className="inline-flex items-center text-primary dark:text-primary-dark hover:underline"
+          >
+            <AiOutlineCopy className="mr-1" /> Copy Credentials
+          </button>
+        </div>
         <div className="mt-4 text-center">
           <button
             onClick={() => setIsSignupMode(!isSignupMode)}

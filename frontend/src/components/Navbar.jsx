@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart, AiOutlineSearch } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { FaUser, FaRegUser } from "react-icons/fa";
+import { TbUserShield } from "react-icons/tb";
 import { TbLogout } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { StoreContext } from "../utils/StoreContext";
@@ -20,6 +21,7 @@ const Navbar = ({ setShowAuth }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const adminUrl = process.env.REACT_APP_ADMIN_URL;
 
   useEffect(() => {
     // Apply dark mode based on the state
@@ -38,6 +40,7 @@ const Navbar = ({ setShowAuth }) => {
 
   const handleLogout = () => {
     localStorage.clear("userToken");
+    localStorage.clear("adminToken");
     setToken("");
     toast.success("Logged out successfully");
   };
@@ -63,7 +66,7 @@ const Navbar = ({ setShowAuth }) => {
         </div>
 
         {/* Desktop Links */}
-        <div className="hidden lg:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-6">
           <Link
             to="/"
             className={`text-sm font-medium hover:border-b-2 ${
@@ -95,12 +98,13 @@ const Navbar = ({ setShowAuth }) => {
             Orders
           </Link>
           {isAdmin && (
-            <div
-              to="/admin"
-              className={`text-sm font-medium hover:border-b-2 `}
+            <a
+              href={adminUrl}
+              target="_blank"
+              className={`text-sm font-medium hover:border-b-2 hover:cursor-pointer `}
             >
               Admin
-            </div>
+            </a>
           )}
         </div>
 
@@ -205,7 +209,7 @@ const Navbar = ({ setShowAuth }) => {
       </div>
 
       {/* Mobile Bottom Navbar Links */}
-      <div className="fixed bottom-0 left-0 right-0 lg:hidden bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 flex justify-around p-2">
+      <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200 dark:border-gray-700 flex justify-around p-2">
         <Link
           to="/"
           className={`flex flex-col items-center ${
@@ -250,6 +254,10 @@ const Navbar = ({ setShowAuth }) => {
           <BiFoodMenu className="text-2xl" />
           <span className="text-xs">Orders</span>
         </Link>
+        <a href={adminUrl} className={`flex flex-col items-center`}>
+          <TbUserShield className="text-2xl" />
+          <span className="text-xs">Admin</span>
+        </a>
         <Link
           to="/profile"
           className={`flex flex-col items-center ${

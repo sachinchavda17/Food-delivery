@@ -18,6 +18,7 @@ An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Str
 ## Technologies Used
 
 - **Frontend**:
+
   - React
   - Tailwind CSS
   - Context API (for state management)
@@ -53,9 +54,14 @@ An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Str
    ```
 
 2. **Install node modules**:
+
+   ```bash
    npm install
+   ```
 
 3. **Set Environment variables Backend**:
+
+```bash
    CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
    CLOUDINARY_API_KEY=your_cloudinary_api_key
    CLOUDINARY_API_SECRET=your_cloudinary_api_secret
@@ -63,25 +69,31 @@ An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Str
    JWT_SECRET=your_jwt_secret
    STRIPE_SECRET_KEY=your_stripe_secret_key
    FRONTEND_URL=http://localhost:3000
+```
 
 4. **Set Environment variables Frontend and Backend**:
-  REACT_APP_BASE_URL=http://localhost:5000
+
+   ```bash
+   REACT_APP_BASE_URL=http://localhost:5000
+   ```
 
 5. **Run Project**:
+   ```bash
    npm start
-
-
+   ```
 
 ### Changes and Explanation:
 
-1. **Install node modules**:  
+1. **Install node modules**:
+
    - Changed to **Install Dependencies** to clarify that it installs both frontend and backend dependencies in one step.
 
-2. **Set Environment Variables**:  
+2. **Set Environment Variables**:
+
    - Separated frontend and backend environment variables for clarity.
    - Added a note about creating `.env` files for the environment variables, as this is a common practice.
 
-3. **Run Project**:  
+3. **Run Project**:
    - Split the running commands for backend and frontend. Developers need to run both separately.
 
 This should work perfectly with your setup! Let me know if you have any other questions.

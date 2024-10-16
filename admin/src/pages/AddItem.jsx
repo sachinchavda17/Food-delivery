@@ -45,8 +45,8 @@ const AddItem = () => {
           setValue("desc", desc);
           setValue("price", price);
           setValue("ratings", ratings);
-          setValue("category", category);
-          setImage({ name: imageUrl }); // Set existing image for display
+          setValue("category", category._id);
+          setImage(imageUrl); // Set existing image for display
         } catch (error) {
           toast.error("Failed to fetch item details.");
         }
@@ -230,8 +230,6 @@ const AddItem = () => {
                   max: 5,
                 })}
                 className="input-field w-full border p-3 rounded-md bg-transparent dark:text-gray-300 focus:outline-primary dark:focus:outline-primary-dark"
-                min="0"
-                max={"5"}
               />
               {errors.ratings && (
                 <span className="text-red-500">{errors.ratings.message}</span>
@@ -249,6 +247,7 @@ const AddItem = () => {
               <select
                 id="category"
                 {...register("category", { required: "Category is required" })}
+                disabled={!!id} // Disable during update if necessary
                 className="input-field w-full border p-3 rounded-md bg-transparent dark:text-gray-300 focus:outline-primary dark:focus:outline-primary-dark dark:bg-secondary"
               >
                 <option value="">--Select Category--</option>
@@ -301,10 +300,14 @@ const AddItem = () => {
                   </div>
                 ) : (
                   <p className="text-secondary dark:text-ternary-dark text-wrap">
-                    {typeof image === "object" ? (
+                    {image && typeof image === "object" ? (
                       <div className="flex items-center justify-center gap-5">
                         <span>Image selected: </span>
-                        <img src={image.name} alt="" className="w-20 " />
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt=""
+                          className="w-20"
+                        />
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-5">

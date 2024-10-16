@@ -38,7 +38,6 @@ export const addFood = async (req, res) => {
 
     menu.foods.push(newFood._id); // Add food ID to menu's foods array
     await menu.save();
-    
 
     res.status(201).json({
       message: "Food added successfully!",
@@ -55,23 +54,31 @@ export const addFood = async (req, res) => {
 export const updateFood = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, desc, price, category, rating } = req.body;
+    const { name, desc, price, category, ratings } = req.body;
+
+    console.log("ratings ", ratings);
+    console.log(typeof ratings);
 
     // Validate required fields
     if (!name || !desc || !price || !category) {
-      return res.status(400).json({ error: "Name, description, price, and category are required." });
+      return res.status(400).json({
+        error: "Name, description, price, and category are required.",
+      });
     }
 
     // Prepare the updated data
     const updatedData = { name, desc, price, category };
 
-    // Add rating if provided
-    if (rating !== undefined) {
+    // Add ratings if provided
+    if (ratings !== undefined) {
+      const ratingNumber = Number(ratings);
       // Assuming rating should be a number and between 1-5
-      if (typeof rating !== "number" || rating < 1 || rating > 5) {
-        return res.status(400).json({ error: "Rating must be a number between 1 and 5." });
+      if (isNaN(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
+        return res
+          .status(400)
+          .json({ error: "Rating must be a number between 1 and 5." });
       }
-      updatedData.rating = rating;
+      updatedData.ratings = ratingNumber;
     }
 
     // Find the food item to update
@@ -87,7 +94,7 @@ export const updateFood = async (req, res) => {
         return res.status(404).json({ error: "Menu not found" });
       }
       // Add the food to the new menu's foods array
-      menu.foods.push(id);  // Use food ID to add to the new menu
+      menu.foods.push(id); // Use food ID to add to the new menu
 
       // Remove the food item from the old menu's foods array
       await Menu.updateMany(
@@ -134,8 +141,6 @@ export const updateFood = async (req, res) => {
   }
 };
 
-
-
 export const listFood = async (req, res) => {
   try {
     const foods = await Food.find().populate("category");
@@ -164,7 +169,7 @@ export const removeFood = async (req, res) => {
     );
 
     // Delete the food item from the Food collection
-    await food.remove();
+    await Food.deleteOne({ _id: id });
 
     res.json({ success: true, message: "Food removed successfully!" });
   } catch (error) {

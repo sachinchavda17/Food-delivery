@@ -46,37 +46,41 @@ const StoreContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    getAllFoods();
-    const existsToken = localStorage.getItem("userToken");
-    if (existsToken) {
-      setToken(existsToken);
+    // Check for token and set it
+    const userToken = localStorage.getItem("userToken");
+    const adminToken = localStorage.getItem("adminToken");
+    const tokenToUse = adminToken || userToken;
+
+    if (tokenToUse) {
+      setToken(tokenToUse);
+      setIsAdmin(!!adminToken);
     }
   }, []);
 
+  useEffect(() => {
+    // Fetch all foods or any initial data
+    getAllFoods();
+    getCarts();
+  }, [token]);
+
   const getCarts = async () => {
     try {
-      const existsToken = localStorage.getItem("userToken");
-      if (existsToken) {
-        setToken(existsToken);
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        const res = await getDataApi("/api/carts/get", existsToken);
+      const token =
+        localStorage.getItem("userToken") || localStorage.getItem("adminToken");
+      if (token) {
+        const res = await getDataApi("/api/carts/get", token);
         if (res.success) {
           setCartItems(res.cart);
         } else {
           toast.error(res.error || "Failed to fetch carts");
         }
       } else {
-        toast.error("Please login to check your carts.");
+        toast.error("Please log in to check your carts.");
       }
     } catch (error) {
       toast.error("Failed to fetch carts");
     }
   };
-
-  useEffect(() => {
-    getCarts();
-  }, [token]);
 
   const addToCart = async (item, quantity) => {
     try {
