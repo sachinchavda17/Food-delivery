@@ -7,11 +7,11 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    items: [  
+    items: [
       {
         food: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Food", 
+          ref: "Food",
           required: true,
         },
         quantity: {
@@ -47,16 +47,15 @@ const orderSchema = new mongoose.Schema(
       enum: ["Pending", "Out for Delivery", "Delivered", "Cancelled"],
       default: "Pending",
     },
-    isDelivered: {
-      type: Boolean,
-      default: false,
+    discount: {
+      type: Number,
     },
     deliveredAt: {
       type: Date,
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 

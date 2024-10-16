@@ -89,8 +89,9 @@ const Cart = () => {
                       <td className="sm:p-4 px-2 py-3">
                         &#8377;
                         {Math.round(
-                         ( itemData.food?.price -
-                            (itemData.food?.price * discount) / 100) * itemData.quantity
+                          (itemData.food?.price -
+                            (itemData.food?.price * discount) / 100) *
+                            itemData.quantity
                         )}
                       </td>
                     )}

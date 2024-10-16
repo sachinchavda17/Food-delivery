@@ -42,6 +42,9 @@ const Checkout = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      if (!paymentMethod || !selectedAddress)
+        return toast.error("Please select payment method and address");
+
       const orderData = {
         items: cartItems.map((item) => ({
           food: item.food._id,

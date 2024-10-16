@@ -1,10 +1,10 @@
 import User from "../models/UserModel.js";
-import Food from "../models/FoodModel.js"; // Ensure you import the Food model
+import Food from "../models/FoodModel.js";
 
 export const addToCart = async (req, res) => {
   try {
-    const { userId, foodId, quantity } = req.body; // food item and quantity
-    console.log(userId, foodId, quantity);
+    const { userId, foodId, quantity } = req.body;
+
     if (!userId || !foodId || !quantity) {
       return res
         .status(400)
@@ -69,33 +69,32 @@ export const removeFromCart = async (req, res) => {
     if (foodIndex > -1) {
       // Remove the item from the cart
       user.carts.splice(foodIndex, 1);
+
       await user.save();
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Item removed from cart",
-          cart: user.carts,
-        });
+
+      res.status(200).json({
+        success: true,
+        message: "Item removed from cart",
+        cart: user.carts,
+      });
     } else {
       res
         .status(404)
         .json({ success: false, message: "Item not found in cart" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error removing item from cart",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Error removing item from cart",
+      error: error.message,
+    });
   }
 };
 
 export const getCart = async (req, res) => {
   try {
     const { userId } = req.body;
+
     if (!userId) {
       return res
         .status(400)
@@ -149,13 +148,11 @@ export const updateQuantity = async (req, res) => {
         user.carts.splice(foodIndex, 1);
       }
       await user.save();
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: `Quantity ${action}d`,
-          cart: user.carts,
-        });
+      res.status(200).json({
+        success: true,
+        message: `Quantity ${action}d`,
+        cart: user.carts,
+      });
     } else {
       res.status(404).json({ success: false, error: "Item not found in cart" });
     }
