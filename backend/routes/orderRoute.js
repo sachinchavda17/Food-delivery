@@ -8,13 +8,15 @@ import {
   userOrders,
   verifyOrder,
 } from "../controllers/orderController.js";
+import adminAuth from "../middleware/adminAuth.js";
 const router = express.Router();
 
 router.post("/place", authMiddleware, placeOrder);
-router.post("/verify", verifyOrder);
+router.post("/verify",authMiddleware, verifyOrder);
 router.get("/user-order", authMiddleware, userOrders);
-router.get("/list-order", authMiddleware,listOrders);
-router.put("/update-order",authMiddleware, updateOrder);
-router.delete('/delete/:id',authMiddleware, removeOrder);
+
+router.get("/list-order", adminAuth,listOrders);
+router.put("/update-order",adminAuth, updateOrder);
+router.delete('/delete/:id',adminAuth, removeOrder);
 
 export default router;

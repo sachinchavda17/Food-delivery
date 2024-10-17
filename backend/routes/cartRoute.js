@@ -6,12 +6,14 @@ import {
   updateQuantity,
 } from "../controllers/cartController.js";
 import authMiddleware from "../middleware/auth.js";
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
-router.post("/add", authMiddleware, addToCart);
-router.post("/update", authMiddleware, updateQuantity);
-router.delete("/remove/:foodId", authMiddleware, removeFromCart);
 router.get("/get", authMiddleware, getCart);
+
+router.post("/add", adminAuth, addToCart);
+router.post("/update", adminAuth, updateQuantity);
+router.delete("/remove/:foodId", adminAuth, removeFromCart);
 
 export default router;

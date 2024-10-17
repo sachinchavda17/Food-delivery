@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import {
   AiOutlineClose,
+  AiOutlineCopy,
   AiOutlineEye,
   AiOutlineEyeInvisible,
 } from "react-icons/ai";
@@ -39,11 +40,16 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
         toast.error(response.error || "An error occurred.");
         return;
       }
+      if (response.user.role !== "admin" && response.user.role === "customer") {
+        toast.error("Sorry you user can't Login in Admin Panel  ");
+        toast.error("Please login via admin email. ");
+        return;
+      }
       setToken(response.token);
-      localStorage.setItem("userToken", response.token);
+      localStorage.setItem("adminToken", response.token);
 
       toast.success(response.message || "Login successful.");
-      setShowAuth(false); // Close modal after submission
+      setShowAuth(false);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error(
@@ -59,6 +65,14 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
       document.body.style.overflowY = "scroll";
     };
   }, []);
+
+  // Function to copy test user credentials
+  const handleCopy = () => {
+    const testUserCredentials = "Email: test@gmail.com\nPassword: 123456789";
+    navigator.clipboard.writeText(testUserCredentials);
+    setFormData({ email: "test@gmail.com", password: "123456789" });
+    toast.success("Test user credentials copied to clipboard!");
+  };
 
   return (
     <div
@@ -80,7 +94,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
+              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 dark:text-ternary rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none"
             />
           </div>
           <div className="mb-6 relative">
@@ -92,7 +106,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10" // Add padding to right for eye icon
+              className="mt-1 p-2 w-full bg-gray-100 dark:bg-gray-800 rounded border dark:text-ternary border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary focus:outline-none pr-10" // Add padding to right for eye icon
             />
             <button
               type="button"
@@ -115,6 +129,24 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
             {isSubmitting ? "Processing..." : "Log In"}
           </button>
         </form>
+        {/* Test User Information */}
+        <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-700 text-center">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+            Test User Information
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-1">
+            <strong>Email:</strong> test@gmail.com
+          </p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <strong>Password:</strong> 123456789
+          </p>
+          <button
+            onClick={handleCopy}
+            className="inline-flex items-center text-primary dark:text-primary-dark hover:underline"
+          >
+            <AiOutlineCopy className="mr-1" /> Copy Credentials
+          </button>
+        </div>
         <div className="mt-4 text-center">
           <button
             onClick={() => navigate("/")}

@@ -33,7 +33,7 @@ const StoreContextProvider = ({ children }) => {
 
     setCartCount(count);
     setCartSubTotal(Math.round(subTotal)); // Set original subtotal before discount
-    setDiscountedSubTotal(Math.round(discountAmount)); // Set final subtotal after discount
+    if (discount) setDiscountedSubTotal(Math.round(discountAmount)); // Set final subtotal after discount
   }, [cartItems, discount]);
 
   const getAllFoods = async () => {
@@ -60,7 +60,9 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     // Fetch all foods or any initial data
     getAllFoods();
-    getCarts();
+    if (token) {
+      getCarts();
+    }
   }, [token]);
 
   const getCarts = async () => {

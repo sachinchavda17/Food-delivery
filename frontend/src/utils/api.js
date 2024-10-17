@@ -1,16 +1,13 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL
-// const BASE_URL = "https://bitehub24-server.vercel.app"
-
 
 // Generalized GET request
 export const getDataApi = async (endpoint, token) => {
   try {
-    // console.log("Token being sent:", token); // Debug line
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }), // Ensure this matches your backend
+        ...(token && { Authorization: `Bearer ${token}` }), 
       },
     });
 
@@ -34,7 +31,7 @@ export const postDataApi = async (endpoint, data, token) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { authorization: `Bearer ${token}` }), // Set token if provided
+        ...(token && { authorization: `Bearer ${token}` }),
       },
       body: JSON.stringify(data),
     });
@@ -46,13 +43,9 @@ export const postDataApi = async (endpoint, data, token) => {
     return await response.json();
   } catch (error) {
     console.error("Error posting data:", error);
-    throw error; // Re-throw error for further handling
+    throw error; 
   }
 };
-
-
-// Generalized POST request
-
 
 // Generalized PUT (Update) request
 export const updateData = async (endpoint, data, token) => {
@@ -61,7 +54,7 @@ export const updateData = async (endpoint, data, token) => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }), // Set token if provided
+        ...(token && { Authorization: `Bearer ${token}` }), 
       },
       body: JSON.stringify(data),
     });
@@ -73,7 +66,7 @@ export const updateData = async (endpoint, data, token) => {
     return await response.json();
   } catch (error) {
     console.error("Error updating data:", error);
-    throw error; // Re-throw error for further handling
+    throw error; 
   }
 };
 
@@ -84,7 +77,7 @@ export const deleteDataApi = async (endpoint, token) => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }), // Set token if provided
+        ...(token && { Authorization: `Bearer ${token}` }), 
       },
     });
 
@@ -95,6 +88,6 @@ export const deleteDataApi = async (endpoint, token) => {
     return await response.json();
   } catch (error) {
     console.error("Error deleting data:", error);
-    throw error; // Re-throw error for further handling
+    throw error; 
   }
 };

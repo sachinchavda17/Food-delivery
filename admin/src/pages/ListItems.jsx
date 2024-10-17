@@ -46,13 +46,14 @@ const ListItems = () => {
   const handleDeleteConfirm = async () => {
     try {
       const response = await deleteDataApi(
-        `/api/foods/delete/${selectedItem._id}`
+        `/api/foods/delete/${selectedItem._id}`,
+        token
       );
       if (response.error) {
         return toast.error(response.error);
       }
       toast.success("Item deleted successfully!");
-      setIsAlertOpen(false)
+      setIsAlertOpen(false);
       setItems(items.filter((item) => item._id !== selectedItem._id));
     } catch (error) {
       toast.error("Failed to delete the item.");

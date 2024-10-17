@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUserShield, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaUserShield, FaTwitter, FaLinkedin,FaGithub } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { getDataApi } from "../utils/api";
 import { toast } from "react-hot-toast";
@@ -8,9 +8,12 @@ import { useEffect } from "react";
 
 const Footer = () => {
   const [menuData, setMenuData] = useState([]);
+  
   const portfolio = process.env.REACT_APP_PORTFOLIO;
   const insta = process.env.REACT_APP_INSTA;
   const linkedin = process.env.REACT_APP_LINKEDIN;
+  const github = process.env.REACT_APP_GITHUB;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -136,6 +139,18 @@ const Footer = () => {
                 className="hover:text-primary dark:hover:text-primary-dark hover:cursor-pointer"
               >
                 <FaLinkedin className="w-5 h-5 md:w-6 md:h-6" />
+              </a>
+              <a
+                href={
+                  linkedin
+                    ? `https://github.com/${github}`
+                    : "https://github.com"
+                }
+                target="_blank"
+                aria-label="GitHub"
+                className="hover:text-primary dark:hover:text-primary-dark hover:cursor-pointer"
+              >
+                <FaGithub className="w-5 h-5 md:w-6 md:h-6" />
               </a>
             </div>
           </div>

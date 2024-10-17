@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getDataApi } from "../utils/api"; // Assuming this is your API helper
-import loadingSvg from "../assets/loading.svg"; // Loading icon
+import { getDataApi } from "../utils/api"; 
+import loadingSvg from "../assets/loading.svg"; 
 import { StoreContext } from "../utils/StoreContext";
 import OrderDetailsModal from "../model/OrderDetailsModal";
 import { getStatusColor, getStatusIcon } from "../utils/helpers";
@@ -8,7 +8,7 @@ import { getStatusColor, getStatusIcon } from "../utils/helpers";
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState(null); // Add state for selected order
+  const [selectedOrder, setSelectedOrder] = useState(null); 
   const { token } = useContext(StoreContext);
 
   useEffect(() => {
@@ -26,11 +26,11 @@ const MyOrders = () => {
   }, [token]);
 
   const openOrderDetails = (order) => {
-    setSelectedOrder(order); // Set selected order for modal
+    setSelectedOrder(order); 
   };
 
   const closeOrderDetails = () => {
-    setSelectedOrder(null); // Close modal
+    setSelectedOrder(null); 
   };
 
   return (
@@ -72,7 +72,7 @@ const MyOrders = () => {
 
               <button
                 className="bg-primary text-white py-2 px-4 rounded-lg hover:bg-accent transition-colors duration-300 w-full"
-                onClick={() => openOrderDetails(order)} // Open modal on click
+                onClick={() => openOrderDetails(order)}
               >
                 View Details
               </button>

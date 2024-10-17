@@ -6,6 +6,7 @@ import {
   deleteMenuItem,
 } from "../controllers/menuController.js";
 import fileUpload from "express-fileupload";
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
@@ -16,9 +17,11 @@ router.use(
     tempFileDir: "/tmp/",
   })
 );
-router.post("/create", createMenuItem); // Create new item
+
 router.get("/list", getMenuItems); // Get all menu items
-router.put("/update/:id", updateMenuItem); // Update item by ID
-router.delete("/delete/:id", deleteMenuItem); // Delete item by ID
+
+router.post("/create", adminAuth, createMenuItem); // Create new item
+router.put("/update/:id", adminAuth, updateMenuItem); // Update item by ID
+router.delete("/delete/:id", adminAuth, deleteMenuItem); // Delete item by ID
 
 export default router;

@@ -5,31 +5,38 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { StoreContext } from "../utils/StoreContext"; // Assuming you are using a context for user token
 import toast from "react-hot-toast";
 import { GoHomeFill } from "react-icons/go";
-import { BiSolidFoodMenu } from "react-icons/bi";
+import { BiSolidFoodMenu ,BiSolidDiscount} from "react-icons/bi";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { FaUsers } from "react-icons/fa6";
 
 const Navbar = ({ setShowAuth }) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Get dark mode preference from localStorage or default to false
+    return localStorage.getItem("darkMode") === "true";
+  });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { token, setToken } = useContext(StoreContext); // Assuming you have a token in context
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.clear("userToken");
+    localStorage.clear("adminToken");
     setToken("");
     toast.success("Logged out successfully");
     setDropdownOpen(false);
   };
 
   useEffect(() => {
+    // Apply dark mode based on the state
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
+    // Save dark mode preference to localStorage
+    localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
+
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -94,6 +101,16 @@ const Navbar = ({ setShowAuth }) => {
             } `}
           >
             Menu Manage
+          </Link>
+          <Link
+            to="/promocode"
+            className={`text-sm font-medium hover:border-b-2 ${
+              location.pathname === "/promocode"
+                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                : ""
+            } `}
+          >
+            Promo Code Manage
           </Link>
         </div>
 
@@ -195,6 +212,17 @@ const Navbar = ({ setShowAuth }) => {
         >
           <TfiMenuAlt className="text-2xl" />
           <span className="text-xs">Menu's</span>
+        </Link>
+        <Link
+          to="/promocode"
+          className={`flex flex-col items-center ${
+            location.pathname === "/promocode"
+              ? "text-primary dark:text-primary-dark "
+              : ""
+          } `}
+        >
+          <BiSolidDiscount className="text-2xl" />
+          <span className="text-xs">Promocode's</span>
         </Link>
       </div>
     </div>

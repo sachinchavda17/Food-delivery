@@ -1,15 +1,14 @@
-// api.js
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 import axios from "axios";
-// Generalized GET request
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export const getDataApi = async (endpoint, token) => {
   try {
-    // console.log("Token being sent:", token); // Debug line
     const response = await fetch(`${BASE_URL}${endpoint}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }), // Ensure this matches your backend
+        ...(token && { Authorization: `Bearer ${token}` }),
       },
     });
 
@@ -109,6 +108,6 @@ export const deleteDataApi = async (endpoint, token) => {
     return await response.json();
   } catch (error) {
     console.error("Error deleting data:", error);
-    throw error; // Re-throw error for further handling
+    throw error; 
   }
 };

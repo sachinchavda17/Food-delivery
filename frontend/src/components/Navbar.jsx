@@ -3,16 +3,15 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AiOutlineShoppingCart, AiOutlineSearch } from "react-icons/ai";
 import { FiSun, FiMoon } from "react-icons/fi";
 import { FaUser, FaRegUser } from "react-icons/fa";
-import { TbUserShield } from "react-icons/tb";
 import { TbLogout } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { StoreContext } from "../utils/StoreContext";
 import { BiFoodMenu } from "react-icons/bi";
-import { AiOutlineHome, AiOutlineAppstore } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 
 const Navbar = ({ setShowAuth }) => {
+  // Get dark mode preference from localStorage or default to false
   const [darkMode, setDarkMode] = useState(() => {
-    // Get dark mode preference from localStorage or default to false
     return localStorage.getItem("darkMode") === "true";
   });
   const [searchOpen, setSearchOpen] = useState(false);
@@ -30,7 +29,6 @@ const Navbar = ({ setShowAuth }) => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    // Save dark mode preference to localStorage
     localStorage.setItem("darkMode", darkMode);
   }, [darkMode]);
 
@@ -87,17 +85,19 @@ const Navbar = ({ setShowAuth }) => {
           >
             Menu
           </Link>
-          <Link
-            to="/myorders"
-            className={`text-sm font-medium hover:border-b-2 ${
-              location.pathname === "/myorders"
-                ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
-                : ""
-            } `}
-          >
-            Orders
-          </Link>
-          {isAdmin && (
+          {!!token && (
+            <Link
+              to="/myorders"
+              className={`text-sm font-medium hover:border-b-2 ${
+                location.pathname === "/myorders"
+                  ? "text-primary dark:text-primary-dark border-b-2 border-primary-light "
+                  : ""
+              } `}
+            >
+              Orders
+            </Link>
+          )}
+          {!!token && isAdmin && (
             <a
               href={adminUrl}
               target="_blank"
@@ -135,18 +135,20 @@ const Navbar = ({ setShowAuth }) => {
           </div>
 
           {/* Cart Icon */}
-          <Link className="relative hidden md:block" to={"/cart"}>
-            <AiOutlineShoppingCart
-              className={`text-2xl text-gray-600 dark:text-gray-100 ${
-                location.pathname === "/cart"
-                  ? "text-primary dark:text-primary-dark"
-                  : ""
-              } `}
-            />
-            {!!cartCount && (
-              <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3" />
-            )}
-          </Link>
+          {token && (
+            <Link className="relative hidden md:block" to={"/cart"}>
+              <AiOutlineShoppingCart
+                className={`text-2xl text-gray-600 dark:text-gray-100 ${
+                  location.pathname === "/cart"
+                    ? "text-primary dark:text-primary-dark"
+                    : ""
+                } `}
+              />
+              {!!cartCount && (
+                <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3" />
+              )}
+            </Link>
+          )}
 
           {/* Dark Mode Toggle */}
           <button
@@ -222,17 +224,19 @@ const Navbar = ({ setShowAuth }) => {
           <span className="text-xs">Home</span>
         </Link>
 
-        <Link
-          to="/cart"
-          className={`flex flex-col items-center ${
-            location.pathname === "/cart"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <AiOutlineShoppingCart className="text-2xl" />
-          <span className="text-xs">Cart</span>
-        </Link>
+        {token && (
+          <Link
+            to="/cart"
+            className={`flex flex-col items-center ${
+              location.pathname === "/cart"
+                ? "text-primary dark:text-primary-dark "
+                : ""
+            } `}
+          >
+            <AiOutlineShoppingCart className="text-2xl" />
+            <span className="text-xs">Cart</span>
+          </Link>
+        )}
         <div
           className={`flex flex-col items-center ${
             location.pathname === ""
@@ -243,32 +247,33 @@ const Navbar = ({ setShowAuth }) => {
           <AiOutlineSearch className="text-2xl" />
           <span className="text-xs">Search</span>
         </div>
-        <Link
-          to="/myorders"
-          className={`flex flex-col items-center ${
-            location.pathname === "/myorders"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <BiFoodMenu className="text-2xl" />
-          <span className="text-xs">Orders</span>
-        </Link>
-        <a href={adminUrl} className={`flex flex-col items-center`}>
-          <TbUserShield className="text-2xl" />
-          <span className="text-xs">Admin</span>
-        </a>
-        <Link
-          to="/profile"
-          className={`flex flex-col items-center ${
-            location.pathname === "/profile"
-              ? "text-primary dark:text-primary-dark "
-              : ""
-          } `}
-        >
-          <FaRegUser className="text-2xl" />
-          <span className="text-xs">My Profile</span>
-        </Link>
+
+        {!!token && (
+          <Link
+            to="/myorders"
+            className={`flex flex-col items-center ${
+              location.pathname === "/myorders"
+                ? "text-primary dark:text-primary-dark "
+                : ""
+            } `}
+          >
+            <BiFoodMenu className="text-2xl" />
+            <span className="text-xs">Orders</span>
+          </Link>
+        )}
+        {!!token && (
+          <Link
+            to="/profile"
+            className={`flex flex-col items-center ${
+              location.pathname === "/profile"
+                ? "text-primary dark:text-primary-dark "
+                : ""
+            } `}
+          >
+            <FaRegUser className="text-2xl" />
+            <span className="text-xs">My Profile</span>
+          </Link>
+        )}
       </div>
     </nav>
   );

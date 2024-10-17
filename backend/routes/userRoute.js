@@ -8,8 +8,8 @@ import {
   updateUserProfile,
   userProfileController,
 } from "../controllers/userController.js";
-import requireAuth from "../middleware/requireAuth.js";
 import authMiddleware from "../middleware/auth.js";
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
@@ -17,8 +17,9 @@ router.post("/register", registerController);
 router.post("/login", loginController);
 router.get("/profile", authMiddleware, userProfileController);
 router.put("/profile-update", authMiddleware, updateUserProfile);
-router.get("/list", authMiddleware, listUsers);
-router.delete("/delete/:id", authMiddleware, removeUser);
-router.put("/update/:id", authMiddleware, updateUser);
+
+router.get("/list", adminAuth, listUsers);
+router.delete("/delete/:id", adminAuth, removeUser);
+router.put("/update/:id", adminAuth, updateUser);
 
 export default router;

@@ -3,15 +3,10 @@ import { useForm } from "react-hook-form";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import {
-  postDataApi,
-  getDataApi,
-  putDataApi,
-  deleteDataApi,
-  fileUploadHandler,
-} from "../utils/api";
+import { getDataApi, deleteDataApi, fileUploadHandler } from "../utils/api";
 import { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
+import loadingSvg from "../assets/loading.svg";
 
 const AddItem = () => {
   const {
@@ -23,16 +18,17 @@ const AddItem = () => {
   } = useForm();
   const [image, setImage] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(false); // Loading state
   const { token } = useContext(StoreContext);
   const { id } = useParams(); // Get item ID from URL
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
-      // Fetch item details if ID exists (updating)
       const fetchData = async () => {
         try {
-          const response = await getDataApi(`/api/foods/get/${id}`);
+          setLoading(true); // Set loading before fetch
+          const response = await getDataApi(`/api/foods/get/${id}`,token);
           const {
             name,
             desc,
@@ -49,6 +45,8 @@ const AddItem = () => {
           setImage(imageUrl); // Set existing image for display
         } catch (error) {
           toast.error("Failed to fetch item details.");
+        } finally {
+          setLoading(false); // End loading after fetch
         }
       };
       fetchData();
@@ -58,6 +56,7 @@ const AddItem = () => {
   useEffect(() => {
     const fetchMenu = async () => {
       try {
+        setLoading(true); // Set loading before fetching menu
         const response = await getDataApi("/api/menu/list");
         if (!response.success) {
           toast.error(response.error || "Failed to fetch menu details.");
@@ -66,6 +65,8 @@ const AddItem = () => {
         }
       } catch (error) {
         toast.error("Failed to fetch menu details.");
+      } finally {
+        setLoading(false); // End loading after fetch
       }
     };
     fetchMenu();
@@ -73,6 +74,7 @@ const AddItem = () => {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true); // Start loading before submitting
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("desc", data.desc);
@@ -85,34 +87,37 @@ const AddItem = () => {
         formData.append("image", image);
       }
 
+      let response;
       if (id) {
         // Update existing item
-        const response = await fileUploadHandler(
+        response = await fileUploadHandler(
           `/api/foods/update/${id}`,
           "put",
           formData,
           token
         );
-        if (response.error) {
-          return toast.error(response.error || "Failed to Update");
-        } else toast.success(response.message || "Item updated successfully!");
       } else {
         // Add new item
-        const response = await fileUploadHandler(
+        response = await fileUploadHandler(
           "/api/foods/add",
           "post",
           formData,
           token
         );
-        if (response.error) {
-          return toast.error(response.error || "Failed to Add");
-        } else toast.success(response.message || "Item added successfully!");
       }
-      if (!id) {
-        resetForm();
+
+      if (response.error) {
+        toast.error(response.error || "Failed to submit");
+      } else {
+        toast.success(
+          id ? "Item updated successfully!" : "Item added successfully!"
+        );
+        if (!id) resetForm(); // Clear form only when adding new
       }
     } catch (error) {
       toast.error("Failed to submit the form.");
+    } finally {
+      setLoading(false); // End loading after submission
     }
   };
 
@@ -130,14 +135,18 @@ const AddItem = () => {
 
   const handleDelete = async () => {
     try {
-      const response = await deleteDataApi(`/api/foods/delete/${id}`);
+      setLoading(true); // Start loading before deletion
+      const response = await deleteDataApi(`/api/foods/delete/${id}`,token);
       if (response.error) {
-        return toast.error(response.error);
+        toast.error(response.error);
+      } else {
+        toast.success("Item deleted successfully!");
+        navigate("/"); // Redirect after deletion
       }
-      toast.success("Item deleted successfully!");
-      navigate("/"); // Redirect after deletion
     } catch (error) {
       toast.error("Failed to delete the item.");
+    } finally {
+      setLoading(false); // End loading after deletion
     }
   };
 
@@ -146,13 +155,25 @@ const AddItem = () => {
     setImage(null); // Clear image after submission or reset
   };
 
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
+        <img src={loadingSvg} alt="Loading" />
+        <span className="ml-2 text-lg dark:text-ternary">Loading...</span>
+      </div>
+    );
+  }
   return (
-    <div className="mb-5 p-6 pb-20  w-full max-w-3xl mx-auto">
-      <div className="bg-background-light dark:bg-secondary p-6 rounded-lg shadow-lg ">
+    <div className="mb-5 p-6 pb-20 w-full max-w-3xl mx-auto">
+      <div className="bg-background-light dark:bg-secondary p-6 rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold text-primary dark:text-primary-dark mb-6 text-center">
           {id ? "Update Food Item" : "Add New Food Item"}
         </h2>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6"
+          noValidate={true}
+        >
           <div className="space-y-4">
             {/* Name field */}
             <div className="flex flex-col">
@@ -246,7 +267,9 @@ const AddItem = () => {
               </label>
               <select
                 id="category"
-                {...register("category", { required: "Category is required" })}
+                {...register("category", {
+                  required: "Category is required",
+                })}
                 disabled={!!id} // Disable during update if necessary
                 className="input-field w-full border p-3 rounded-md bg-transparent dark:text-gray-300 focus:outline-primary dark:focus:outline-primary-dark dark:bg-secondary"
               >
@@ -266,7 +289,6 @@ const AddItem = () => {
             <div className="flex flex-col">
               <label
                 htmlFor="image"
-                // Clickable label
                 className="font-medium text-secondary dark:text-ternary-dark cursor-pointer"
               >
                 Upload Image
@@ -311,7 +333,7 @@ const AddItem = () => {
                       </div>
                     ) : (
                       <div className="flex items-center justify-center gap-5">
-                        <span>Exixting Image: </span>
+                        <span>Existing Image: </span>
                         <img src={image} alt="" className="w-20 " />
                       </div>
                     )}
@@ -320,6 +342,7 @@ const AddItem = () => {
               </div>
             </div>
 
+            {/* Buttons */}
             {/* Buttons */}
             <div className="flex items-center justify-between gap-5">
               <button
@@ -349,6 +372,7 @@ const AddItem = () => {
           </div>
         </form>
       </div>
+      <Toaster />
     </div>
   );
 };

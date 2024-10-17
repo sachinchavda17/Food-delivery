@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { postDataApi } from "../utils/api";
 import loadingSvg from "../assets/loading.svg";
+import { StoreContext } from "../utils/StoreContext";
 
 const VarifyOrder = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { token } = useContext(StoreContext);
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,16 +20,20 @@ const VarifyOrder = () => {
       document.body.style.overflowY = "scroll";
     };
   }, []);
-  
+
   useEffect(() => {
     const verifyOrder = async () => {
       try {
         setLoading(true);
         // Make an API request to verify order
-        const response = await postDataApi("/api/orders/verify", {
-          orderId,
-          success,
-        });
+        const response = await postDataApi(
+          "/api/orders/verify",
+          {
+            orderId,
+            success,
+          },
+          token
+        );
         if (response.success) {
           setResult(response.message);
         } else {

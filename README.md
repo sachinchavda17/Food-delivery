@@ -1,6 +1,6 @@
 # Food-delivery
 
-# BiteHub24
+## BiteHub24
 
 An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Stripe** for payment processing. This platform allows users to browse products, add items to their cart, and place orders using various payment methods including **Card** and **Cash on Delivery (COD)**.
 

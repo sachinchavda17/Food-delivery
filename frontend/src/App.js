@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar"; // Import the Navbar component
+import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import AuthModal from "./model/AuthModal";
@@ -13,8 +13,10 @@ import Menu from "./pages/Menu";
 import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import { StoreContext } from "./utils/StoreContext";
 
 function App() {
+  const {token} = useContext(StoreContext)
   const [showAuth, setShowAuth] = useState(false);
   return (
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
@@ -24,12 +26,16 @@ function App() {
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/verify" element={<VarifyOrder />} />
-            <Route path="/myorders" element={<MyOrders />} />
             <Route path="/menu" element={<Menu />} />
-            <Route path="/profile" element={<Profile />} />
+            {token && (
+              <>
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/verify" element={<VarifyOrder />} />
+                <Route path="/myorders" element={<MyOrders />} />
+                <Route path="/profile" element={<Profile />} />
+              </>
+            )}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ScrollToTop>

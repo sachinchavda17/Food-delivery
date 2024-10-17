@@ -6,7 +6,6 @@ import {
   AiOutlineCopy,
 } from "react-icons/ai";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../utils/StoreContext";
 import { postDataApi } from "../utils/api";
 

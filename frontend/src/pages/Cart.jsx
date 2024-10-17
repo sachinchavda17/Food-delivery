@@ -13,6 +13,7 @@ const Cart = () => {
     discount,
     setDiscount,
     discountedSubTotal,
+    token,
   } = useContext(StoreContext);
   const [promoCode, setPromoCode] = useState("");
 
@@ -23,9 +24,13 @@ const Cart = () => {
     e.preventDefault();
     try {
       if (!promoCode) return toast.error("Please Enter promocode");
-      const response = await postDataApi("/api/promocode/validate", {
-        code: promoCode,
-      });
+      const response = await postDataApi(
+        "/api/promocode/validate",
+        {
+          code: promoCode,
+        },
+        token
+      );
       if (response.success) {
         setDiscount(response.discount);
         toast.success("Promo code applied successfully!");

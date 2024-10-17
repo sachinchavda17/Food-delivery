@@ -12,7 +12,7 @@ export const getStatusIcon = (status) => {
     case "Pending":
       return <FaClock className="text-yellow-500" size={24} />;
     default:
-      return <FaClock className="text-yellow-500" size={24} />; // Fallback icon
+      return <FaClock className="text-yellow-500" size={24} />; 
   }
 };
 
@@ -30,6 +30,6 @@ export const getStatusColor = (status) => {
     case "Paid":
       return "bg-green-200 text-green-700";
     default:
-      return "bg-gray-200 text-gray-700"; // Fallback class
+      return "bg-gray-200 text-gray-700"; 
   }
 };

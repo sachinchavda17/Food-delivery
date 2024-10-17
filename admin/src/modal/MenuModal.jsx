@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
-import axios from "axios";
 import { fileUploadHandler } from "../utils/api";
 import { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
@@ -14,7 +13,6 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const { token } = useContext(StoreContext);
-
 
   useEffect(() => {
     document.body.style.overflowY = "hidden";

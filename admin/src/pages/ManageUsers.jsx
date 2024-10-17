@@ -49,8 +49,8 @@ const ManageUsers = () => {
   };
 
   const handleDeleteClick = (user) => {
-    setSelectedUser(user); // Set the user to be deleted
-    setIsAlertOpen(true); // Open the alert modal
+    setSelectedUser(user); 
+    setIsAlertOpen(true); 
   };
 
   const handleDeleteConfirm = async () => {
@@ -103,7 +103,7 @@ const ManageUsers = () => {
     return (
       <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
         <img src={loadingSvg} alt="Loading" />
-        <span className="ml-2 text-lg">Loading Users...</span>
+        <span className="ml-2 text-lg dark:text-ternary">Loading Users...</span>
       </div>
     );
   }
