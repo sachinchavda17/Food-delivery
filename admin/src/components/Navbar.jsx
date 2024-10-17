@@ -140,12 +140,7 @@ const Navbar = ({ setShowAuth }) => {
               {/* Dropdown for Logged-In User */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-2 z-10">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  >
-                    My Profile
-                  </Link>
+                  
                   <button
                     onClick={handleLogout}
                     className="block w-full px-4 py-2 text-left text-red-600 dark:text-red-500 hover:bg-gray-100 dark:hover:bg-gray-700"

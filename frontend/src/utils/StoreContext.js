@@ -86,6 +86,10 @@ const StoreContextProvider = ({ children }) => {
 
   const addToCart = async (item, quantity) => {
     try {
+      if(!token) {
+        toast.error("Please Login to add Items in Cart.")
+        return
+      }
       const response = await postDataApi(
         `/api/carts/add`,
         {
