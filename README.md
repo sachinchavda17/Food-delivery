@@ -47,9 +47,7 @@ An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Str
 
 1. **Clone the Repository**:
 
-   ```bash
    git clone [Food Delivery](https://github.com/sachinchavda17/Food-delivery.git).
-   ```
 
 2. **Install node modules**:
 
