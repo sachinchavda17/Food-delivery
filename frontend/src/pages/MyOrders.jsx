@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import { getDataApi } from "../utils/api"; 
-import loadingSvg from "../assets/loading.svg"; 
+import { getDataApi } from "../utils/api";
+import loadingSvg from "../assets/loading.svg";
 import { StoreContext } from "../utils/StoreContext";
 import OrderDetailsModal from "../model/OrderDetailsModal";
 import { getStatusColor, getStatusIcon } from "../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState(null); 
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const { token } = useContext(StoreContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,11 +28,11 @@ const MyOrders = () => {
   }, [token]);
 
   const openOrderDetails = (order) => {
-    setSelectedOrder(order); 
+    setSelectedOrder(order);
   };
 
   const closeOrderDetails = () => {
-    setSelectedOrder(null); 
+    setSelectedOrder(null);
   };
 
   return (
@@ -65,7 +67,11 @@ const MyOrders = () => {
 
               <p className={`text-gray-500 dark:text-gray-400 mb-2 `}>
                 Status:{" "}
-                <span className={`${getStatusColor(order.orderStatus)} inline-block px-2 py-1 text-xs font-semibold rounded`}>
+                <span
+                  className={`${getStatusColor(
+                    order.orderStatus
+                  )} inline-block px-2 py-1 text-xs font-semibold rounded`}
+                >
                   {order.orderStatus}
                 </span>
               </p>

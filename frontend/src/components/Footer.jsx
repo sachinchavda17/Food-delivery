@@ -32,7 +32,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="bg-background dark:bg-background-dark text-gray-900 dark:text-gray-100 py-8 md:py-10 transition-all duration-300 "
+      className="bg-background dark:bg-background-dark text-gray-900 dark:text-gray-100 py-8 pb-20 md:py-10 transition-all duration-300 "
       style={{ boxShadow: "0px 20px 10px 15px" }}
     >
       <div className="container mx-auto px-6 lg:px-16">

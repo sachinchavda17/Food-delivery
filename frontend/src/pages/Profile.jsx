@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../utils/StoreContext";
 import { getDataApi, updateData } from "../utils/api";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [loading, setLoading] = useState(true);

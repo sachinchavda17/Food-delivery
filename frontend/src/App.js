@@ -22,7 +22,7 @@ function App() {
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
       {showAuth && <AuthModal showAuth={showAuth} setShowAuth={setShowAuth} />}
       <Navbar setShowAuth={setShowAuth} />
-      <div className="app ">
+      <div className="app w-[90%] md:w-[80%] m-auto">
         <ScrollToTop>
           <Routes>
             <Route path="/" element={<Home />} />

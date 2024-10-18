@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
 import { StoreContext } from "../utils/StoreContext";
 import Rating from "./Rating";
@@ -22,7 +22,7 @@ const FoodItem = ({ item }) => {
         />
         {!quantity ? (
           <div
-            className="add flex items-center gap-3 absolute px-3 py-2  bottom-3.5 right-3.5 cursor-pointer rounded-full text-green-500 hover:text-green-600 bg-green-200"
+            className="add flex items-center gap-3 absolute px-3 py-2 bottom-3.5 right-3.5 cursor-pointer rounded-full text-green-500 hover:text-green-600 bg-green-200"
             onClick={() => addToCart(item, 1)}
           >
             <AiOutlinePlusCircle />
@@ -46,12 +46,12 @@ const FoodItem = ({ item }) => {
           </div>
         )}
       </div>
-      <div className="food-item-info p-5">
+      <div className="food-item-info p-3 sm:p-5">
         <div className="food-item-name-rating flex justify-between items-center mb-2">
           <p className="text-lg font-medium dark:text-ternary-dark">
             {item.name}
           </p>
-          <Rating rating={item?.ratings} className={"flex gap-1"} />
+          {/* <Rating rating={item?.ratings} className={"flex gap-1"} /> */}
         </div>
         <p className="food-item-desc text-secondary-light text-sm">
           {item.desc}
