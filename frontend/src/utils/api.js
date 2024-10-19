@@ -1,5 +1,5 @@
-// const BASE_URL = process.env.REACT_APP_BASE_URL
-const BASE_URL = "https://bitehub24-server.vercel.app"
+const BASE_URL = process.env.REACT_APP_BASE_URL
+// const BASE_URL = "https://bitehub24-server.vercel.app"
 
 // Generalized GET request
 export const getDataApi = async (endpoint, token) => {

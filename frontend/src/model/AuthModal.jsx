@@ -87,7 +87,7 @@ const AuthModal = ({ showAuth, setShowAuth }) => {
         showAuth ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg max-w-lg w-full relative overflow-y-auto max-h-[90vh]">
+      <div className="bg-white dark:bg-gray-900 p-6 m-2 rounded-lg shadow-lg max-w-lg w-full relative overflow-y-auto max-h-[90vh]">
         <button
           onClick={() => setShowAuth(false)}
           className="absolute top-5 right-5 text-gray-700 dark:text-gray-200 hover:text-red-500 dark:hover:text-red-400 transition"

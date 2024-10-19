@@ -9,11 +9,26 @@ import img5 from "../assets/banner-5.png";
 import img6 from "../assets/banner-6.png";
 import img7 from "../assets/banner-7.png";
 import img8 from "../assets/banner-8.png";
+import img9 from "../assets/banner-9.png";
+import img10 from "../assets/banner-10.png";
+import img11 from "../assets/banner-11.png";
+import img12 from "../assets/banner-12.png";
 
 const Banner = () => {
   const navigate = useNavigate();
 
-  const images = [img1, img2, img3, img4, img5, img6, img7, img8];
+  const images = [
+    img1,
+    img2,
+    img3,
+    img4,
+    img5,
+    img7,
+    img9,
+    img10,
+    img11,
+    img12,
+  ];
 
   // Slick carousel settings
   const settings = {

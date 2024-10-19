@@ -4,11 +4,11 @@ import { StoreContext } from "../utils/StoreContext";
 import { postDataApi, getDataApi, updateData } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import AddressPopup from "../model/AddAddress";
+import AddAddressModal from "../model/AddAddressModal";
+import CartTotal from "../components/CartTotal";
 
 const Checkout = () => {
-  const { cartSubTotal, cartItems, token, discountedSubTotal, discount } =
-    useContext(StoreContext);
+  const { cartItems, token, discount } = useContext(StoreContext);
   const [loading, setLoading] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
@@ -36,7 +36,7 @@ const Checkout = () => {
     };
 
     fetchAddresses();
-  }, []);
+  }, [token]);
 
   // Submit order
   const onSubmit = async (data) => {
@@ -92,8 +92,10 @@ const Checkout = () => {
         token
       );
       if (response.success) {
-        setAddresses([...addresses, response.user.addresses]);
+        // Assuming response.user.addresses is the full updated list
+        setAddresses(response.user.addresses);
         setIsAddressPopupOpen(false);
+        toast.success("Address added successfully!");
       }
     } catch (error) {
       console.error("Error adding address:", error);
@@ -124,7 +126,7 @@ const Checkout = () => {
               <div
                 className={`address-item p-3 border ${
                   paymentMethod === "Card"
-                    ? "border-primary"
+                    ? "border-primary border-2"
                     : "border-gray-300"
                 } rounded-md mb-3 cursor-pointer w-full`}
                 onClick={() => setPaymentMethod("Card")}
@@ -133,7 +135,7 @@ const Checkout = () => {
               </div>
               <div
                 className={`address-item p-3 border ${
-                  paymentMethod === "cod" ? "border-primary" : "border-gray-300"
+                  paymentMethod === "cod" ? "border-primary border-2" : "border-gray-300"
                 } rounded-md mb-3 cursor-pointer w-full`}
                 onClick={() => setPaymentMethod("cod")}
               >
@@ -160,7 +162,7 @@ const Checkout = () => {
                   key={address._id}
                   className={`address-item p-3 border ${
                     selectedAddress?._id === address._id
-                      ? "border-primary"
+                      ? "border-primary border-2"
                       : "border-gray-300"
                   } rounded-md mb-3 cursor-pointer dark:text-ternary-light`}
                   onClick={() => setSelectedAddress(address)}
@@ -184,40 +186,7 @@ const Checkout = () => {
           <h2 className="text-2xl font-bold mb-5 dark:text-background">
             Cart Totals
           </h2>
-          <div className="space-y-4 dark:text-ternary-light">
-            <div className="flex justify-between">
-              <p>Subtotal</p>
-              <p>&#8377;{cartSubTotal}</p>
-            </div>
-            <div className="flex justify-between">
-              <p>Delivery Fee</p>
-              <p>{cartSubTotal === 0 ? 0 : 2}</p>
-            </div>
-            {discount > 0 && (
-              <div className="flex justify-between text-gray-700 dark:text-gray-200">
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  Discount Applied: {discount}% on each items.
-                </p>
-                <p>-&#8377;{discountedSubTotal}</p>
-              </div>
-            )}
-            <hr className="my-2" />
-            <div className="flex justify-between font-bold">
-              <p>Total</p>
-              <p>
-                &#8377;
-                {discountedSubTotal
-                  ? (
-                      Number(cartSubTotal - discountedSubTotal) +
-                      (Number(discountedSubTotal) === 0 ? 0 : 2)
-                    ).toFixed(2)
-                  : (
-                      Number(cartSubTotal) +
-                      (Number(cartSubTotal) === 0 ? 0 : 2)
-                    ).toFixed(2)}
-              </p>
-            </div>
-          </div>
+          <CartTotal />
           <button
             type="submit"
             className="mt-4 w-full bg-primary text-white py-3 rounded-lg hover:bg-accent transition"
@@ -230,11 +199,12 @@ const Checkout = () => {
               : "PROCEED TO PAYMENT"}
           </button>
         </div>
+        {/* <CartTotal btnName={"Place Order"} navigatePage={"/"} /> */}
       </form>
 
       {/* Address Popup Modal */}
       {isAddressPopupOpen && (
-        <AddressPopup
+        <AddAddressModal
           onClose={handleCloseAddressPopup}
           onSave={handleAddAddress}
         />

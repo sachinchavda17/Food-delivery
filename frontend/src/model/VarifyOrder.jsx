@@ -66,7 +66,7 @@ const VarifyOrder = () => {
       ) : (
         showModal && (
           <div className="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center z-50 transition duration-300 ease-in-out">
-            <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-xl w-96 transform scale-105 transition-all duration-500 ease-out">
+            <div className="bg-white dark:bg-gray-900 m-2 p-6 rounded-xl shadow-xl w-96 transform scale-105 transition-all duration-500 ease-out">
               <h2
                 className={`text-lg font-bold mb-4 text-center ${
                   result === "Order Paid Successfully" ||

@@ -4,6 +4,7 @@ import { AiOutlineClose, AiOutlineShoppingCart } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { postDataApi } from "../utils/api";
 import { toast } from "react-hot-toast";
+import CartTotal from "../components/CartTotal";
 
 const Cart = () => {
   const {
@@ -125,39 +126,7 @@ const Cart = () => {
             {/* Cart Totals Section */}
             <div className="cart-total text-lg font-semibold dark:text-ternary-light p-6 rounded-lg shadow-lg dark:shadow-background-dark hover:shadow-xl ">
               <h2 className="text-2xl mb-4">Cart Totals</h2>
-              <div className="space-y-4">
-                <div className="flex justify-between text-gray-700 dark:text-gray-200">
-                  <p>Subtotal</p>
-                  <p>&#8377;{cartSubTotal}</p>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-gray-700 dark:text-gray-200">
-                    <p className="text-sm text-green-600 dark:text-green-400">
-                      Discount Applied: {discount}%
-                    </p>
-                    <p>-&#8377;{discountedSubTotal}</p>
-                  </div>
-                )}
-                <div className="flex justify-between text-gray-700 dark:text-gray-200">
-                  <p>Delivery Fee</p>
-                  <p>&#8377; 2</p>
-                </div>
-                <div className="flex justify-between font-bold text-primary dark:text-primary-light">
-                  <p>Total</p>
-                  <p>
-                    &#8377;
-                    {discountedSubTotal
-                      ? (
-                          Number(cartSubTotal - discountedSubTotal) +
-                          (Number(discountedSubTotal) === 0 ? 0 : 2)
-                        ).toFixed(2)
-                      : (
-                          Number(cartSubTotal) +
-                          (Number(cartSubTotal) === 0 ? 0 : 2)
-                        ).toFixed(2)}
-                  </p>
-                </div>
-              </div>
+              <CartTotal />
               <button
                 onClick={() => navigate("/checkout")}
                 className="mt-4 w-full bg-red-500 text-white py-3 rounded hover:bg-red-600 transition duration-300 transform hover:scale-105"
@@ -165,7 +134,6 @@ const Cart = () => {
                 PROCEED TO CHECKOUT
               </button>
             </div>
-
             {/* Promo Code Section */}
             <div className="cart-promocode p-6 rounded-lg shadow-lg dark:shadow-background-dark hover:shadow-xl">
               <p className="mb-2 text-gray-600 dark:text-ternary-light">

@@ -31,7 +31,7 @@ export const loginController = async (req, res) => {
       success: true,
       token,
       user,
-      message: "User successfully created",
+      message: "User successfully Login",
     });
   } catch (error) {
     console.error("Error registering user :", error);
@@ -101,7 +101,13 @@ export const registerController = async (req, res) => {
 export const userProfileController = async (req, res) => {
   try {
     const { userId } = req.body;
-    const user = await User.findById(userId).populate("orders").exec();
+    const user = await User.findById(userId).populate({
+      path: "orders",
+      populate: {
+        path: "items.food", // Populate the 'food' field inside 'items'
+        model: "Food", // Reference to the Food model
+      },
+    });
     if (!user) {
       res.status(500).json({
         error: "User doesn't exixts please enter valid user id",
@@ -229,6 +235,45 @@ export const updateUser = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating user:", error);
+    res.status(500).json({ success: false, error: "Server error" });
+  }
+};
+
+// Controller to remove an address
+export const removeAddressController = async (req, res) => {
+  try {
+    const { userId, addressId } = req.body; // Expect userId and addressId in the request body
+    console.log(addressId);
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    // Find the index of the address to remove
+    const addressIndex = user.addresses.findIndex(
+      (address) => address._id.toString() === addressId
+    );
+
+    if (addressIndex === -1) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Address not found" });
+    }
+
+    // Remove the address from the array
+    user.addresses.splice(addressIndex, 1);
+
+    // Save the updated user profile
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Address removed successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Error removing address:", error);
     res.status(500).json({ success: false, error: "Server error" });
   }
 };

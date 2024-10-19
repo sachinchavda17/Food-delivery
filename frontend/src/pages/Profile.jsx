@@ -1,14 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import { StoreContext } from "../utils/StoreContext";
-import { getDataApi, updateData } from "../utils/api";
+import { deleteDataApi, getDataApi, updateData } from "../utils/api";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-
+import { FaTrashAlt } from "react-icons/fa";
+import loadingSvg from "../assets/loading.svg";
+import OrderDetailsModal from "../model/OrderDetailsModal";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const { token } = useContext(StoreContext);
+  const [orderModal, setOrderModal] = useState(false);
+  const [orderModalData, setOrderModalData] = useState();
   const adminUrl = process.env.REACT_APP_ADMIN_URL;
 
   useEffect(() => {
@@ -17,6 +21,7 @@ const Profile = () => {
         const response = await getDataApi("/api/user/profile", token);
         if (response.success) {
           setUser(response.user);
+          console.log(response.user);
         } else {
           return toast.error(
             response.error || "Failed to fetch your profile data."
@@ -52,11 +57,41 @@ const Profile = () => {
     }
   };
 
+  const handleDeleteAddress = async (index) => {
+    try {
+      const addressId = user.addresses[index]._id; // Get the addressId directly from user addresses
+      const response = await updateData(
+        "/api/user/remove-addr",
+        { addressId }, // Pass both userId and addressId in the API call
+        token
+      );
+
+      if (response.success) {
+        const updatedAddresses = user.addresses.filter((_, i) => i !== index);
+        setUser({ ...user, addresses: updatedAddresses });
+        toast.success("Address deleted successfully");
+      } else {
+        toast.error(response.error || "Failed to delete the address.");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to delete the address.");
+    }
+  };
+
   // Show only the two most recent orders
   const recentOrders = user?.orders?.slice(-2).reverse() || [];
 
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
+        <img src={loadingSvg} alt="Loading" />
+        <span className="ml-2 text-lg dark:text-ternary">Loading...</span>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto p-8 pt-24 transition-all duration-300">
+    <div className="container mx-auto px-4  pt-24 pb-8 transition-all duration-300">
       <div className="flex flex-col md:flex-row justify-between">
         {/* Left Section - Profile Info */}
         <div className="md:w-1/3 bg-white dark:bg-secondary-dark p-6 rounded-lg shadow-xl dark:shadow-background-dark transition-all duration-300">
@@ -91,12 +126,21 @@ const Profile = () => {
                 Address
               </h3>
               {user?.addresses?.map((addr, ind) => (
-                <p
-                  className="text-gray-500 dark:text-ternary-dark px-2 py-1 my-1 rounded-lg bg-background-light dark:bg-secondary"
+                <div
                   key={ind}
+                  className="flex justify-between items-center text-gray-500 dark:text-ternary-dark px-2 py-1 my-1 rounded-lg bg-background-light dark:bg-secondary"
                 >
-                  {addr.street}, {addr.city}, {addr.postalCode}, {addr.country}
-                </p>
+                  <p>
+                    {addr.street}, {addr.city}, {addr.postalCode},{" "}
+                    {addr.country}
+                  </p>
+                  <button
+                    onClick={() => handleDeleteAddress(ind)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <FaTrashAlt />
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -203,9 +247,16 @@ const Profile = () => {
                   >
                     <div className="flex justify-between">
                       <p className="text-gray-600 dark:text-ternary-dark">
-                        Order #{order?.orderId} - &#8377; {order?.totalPrice}
+                        Order #{order?._id} - &#8377;{" "}
+                        {Math.round(order?.totalPrice)}
                       </p>
-                      <button className="text-primary dark:text-primary-dark underline">
+                      <button
+                        className="text-primary dark:text-primary-dark underline"
+                        onClick={() => {
+                          setOrderModal(true);
+                          setOrderModalData(order);
+                        }}
+                      >
                         View
                       </button>
                     </div>
@@ -224,6 +275,13 @@ const Profile = () => {
           )}
         </div>
       </div>
+      {!!orderModal && (
+        <OrderDetailsModal
+          isOpen={orderModal}
+          onClose={() => setOrderModal(false)}
+          order={orderModalData}
+        />
+      )}
     </div>
   );
 };

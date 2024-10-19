@@ -3,6 +3,7 @@ import {
   listUsers,
   loginController,
   registerController,
+  removeAddressController,
   removeUser,
   updateUser,
   updateUserProfile,
@@ -17,6 +18,7 @@ router.post("/register", registerController);
 router.post("/login", loginController);
 router.get("/profile", authMiddleware, userProfileController);
 router.put("/profile-update", authMiddleware, updateUserProfile);
+router.put("/remove-addr", authMiddleware, removeAddressController);
 
 router.get("/list", adminAuth, listUsers);
 router.delete("/delete/:id", adminAuth, removeUser);

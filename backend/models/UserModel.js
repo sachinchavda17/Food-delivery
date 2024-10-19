@@ -34,11 +34,11 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    orders: [
-      {
-        orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order" }, // Adding orderId
-      },
-    ],
+    orders: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Order",
+      default: [],
+    },
 
     //   order: { type: Object, required: true },
     phone: Number,
