@@ -7,6 +7,7 @@ const promoCodeSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      set: (value) => value.toUpperCase(), // Convert to uppercase
     },
     discount: {
       type: Number,

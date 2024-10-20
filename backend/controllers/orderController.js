@@ -1,6 +1,6 @@
 import Order from "../models/OrderModel.js";
 import User from "../models/UserModel.js";
-import Food from "../models/FoodModel.js"; // Import Food to retrieve details
+import Food from "../models/FoodModel.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -56,7 +56,7 @@ export const placeOrder = async (req, res) => {
 
     // Update user orders and clear cart
     await User.findByIdAndUpdate(userId, {
-      $push: { orders: { orderId: newOrder._id } },
+      $push: { orders: newOrder._id },
       carts: [], // Remove this line
     });
 

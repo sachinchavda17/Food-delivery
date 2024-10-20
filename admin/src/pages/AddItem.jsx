@@ -28,7 +28,7 @@ const AddItem = () => {
       const fetchData = async () => {
         try {
           setLoading(true); // Set loading before fetch
-          const response = await getDataApi(`/api/foods/get/${id}`,token);
+          const response = await getDataApi(`/api/foods/get/${id}`, token);
           const {
             name,
             desc,
@@ -70,7 +70,7 @@ const AddItem = () => {
       }
     };
     fetchMenu();
-  }, []);
+  }, [token]);
 
   const onSubmit = async (data) => {
     try {
@@ -136,7 +136,7 @@ const AddItem = () => {
   const handleDelete = async () => {
     try {
       setLoading(true); // Start loading before deletion
-      const response = await deleteDataApi(`/api/foods/delete/${id}`,token);
+      const response = await deleteDataApi(`/api/foods/delete/${id}`, token);
       if (response.error) {
         toast.error(response.error);
       } else {
@@ -303,42 +303,42 @@ const AddItem = () => {
                     : "border-gray-300 dark:border-ternary-dark"
                 }`}
               >
-                {!image ? (
-                  <div className="flex items-center justify-center flex-col">
-                    <AiOutlineCloudUpload className="text-5xl text-secondary dark:text-ternary-dark mb-2" />
+                <input
+                  type="file"
+                  accept="image/*"
+                  id="image"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+                <div className="flex items-center justify-center flex-col">
+                  <AiOutlineCloudUpload className="text-4xl text-secondary dark:text-ternary-dark mb-2" />
+                  {!image ? (
                     <p className="text-secondary dark:text-ternary-dark">
                       Drag & Drop your image here, or{" "}
                       <span className="text-primary dark:text-primary-dark font-medium">
                         browse
                       </span>
                     </p>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id="image"
-                      className="hidden"
-                      onChange={handleImageChange}
-                    />
-                  </div>
-                ) : (
-                  <p className="text-secondary dark:text-ternary-dark text-wrap">
-                    {image && typeof image === "object" ? (
-                      <div className="flex items-center justify-center gap-5">
-                        <span>Image selected: </span>
-                        <img
-                          src={URL.createObjectURL(image)}
-                          alt=""
-                          className="w-20"
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center gap-5">
-                        <span>Existing Image: </span>
-                        <img src={image} alt="" className="w-20 " />
-                      </div>
-                    )}
-                  </p>
-                )}
+                  ) : (
+                    <p className="text-secondary dark:text-ternary-dark text-wrap">
+                      {image && typeof image === "object" ? (
+                        <div className="flex items-center justify-center gap-5">
+                          <span>Image selected: </span>
+                          <img
+                            src={URL.createObjectURL(image)}
+                            alt=""
+                            className="w-20"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-5">
+                          <span>Existing Image: </span>
+                          <img src={image} alt="" className="w-20 " />
+                        </div>
+                      )}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

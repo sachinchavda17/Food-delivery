@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaUserShield, FaTwitter, FaLinkedin,FaGithub } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { getDataApi } from "../utils/api";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
 import { useEffect } from "react";
+import { StoreContext } from "../utils/StoreContext";
 
 const Footer = () => {
   const [menuData, setMenuData] = useState([]);
-  
+  const {token} = useContext(StoreContext)
   const portfolio = process.env.REACT_APP_PORTFOLIO;
   const insta = process.env.REACT_APP_INSTA;
   const linkedin = process.env.REACT_APP_LINKEDIN;
@@ -28,7 +29,7 @@ const Footer = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [token]);
 
   return (
     <footer

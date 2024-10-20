@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
 import FoodItem from "./FoodItem";
 
-const Foods = ({ category }) => {
+const Foods = ({ category,heading }) => {
   const { foods } = useContext(StoreContext);
 
   // Filter the foods based on the selected category
@@ -20,7 +20,7 @@ const Foods = ({ category }) => {
       ) : (
         <>
           <h2 className="text-3xl font-semibold dark:text-ternary">
-            Top dishes near you
+            {heading ? heading  :"Top dishes near you"}
           </h2>
           <div className="food-display-list grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fill,_minmax(240px,_1fr))] gap-5 mt-7 gap-x-10">
             {filteredFoods.map((item, index) => (

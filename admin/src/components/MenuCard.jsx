@@ -10,7 +10,7 @@ const MenuCard = ({ menu, handleEdit, handleDeleteClick }) => {
       <img
         src={menu.image}
         alt={menu.name}
-        className="w-full object-cover rounded mb-2"
+        className="w-full object-cover rounded-full  mb-2"
       />
       <h2 className="text-lg font-semibold text-center">{menu.name}</h2>
       <div className="flex justify-between mt-3">

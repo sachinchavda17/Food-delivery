@@ -90,6 +90,6 @@ An e-commerce platform built with **React**, **Express**, **MongoDB**, and **Str
    - Added a note about creating `.env` files for the environment variables, as this is a common practice.
 
 3. **Run Project**:
-   - Split the running commands for backend and frontend. Developers need to run both separately.
+   - Split the running commands for backend, frontend and admin . Developers need to run all separately.
 
 This should work perfectly with your setup! Let me know if you have any other questions.

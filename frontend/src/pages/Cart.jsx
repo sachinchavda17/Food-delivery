@@ -28,7 +28,7 @@ const Cart = () => {
       const response = await postDataApi(
         "/api/promocode/validate",
         {
-          code: promoCode,
+          code: promoCode.toUpperCase(),
         },
         token
       );
@@ -142,7 +142,7 @@ const Cart = () => {
               <form onSubmit={handlePromoCodeSubmit}>
                 <div className="cart-promocode-input flex space-x-2">
                   <input
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
+                    className="w-full px-4 py-2 border uppercase border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
                     type="text"
                     placeholder="Enter Promo Code"
                     value={promoCode}

@@ -89,7 +89,7 @@ const PromoCodeModal = ({
             <input
               type="text"
               placeholder="Enter promo code"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
+              className="w-full px-4 py-2 border uppercase border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               required

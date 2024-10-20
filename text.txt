@@ -1,0 +1,33 @@
+Backend :
+    models,routes,controllers
+    config for cloudinary
+    middleware for admin and user auth
+
+Frontend :
+    Home, Menu, MyOrder, Profile, Cart, Checkout,NotFound pages
+    Navbar, Banner, Footer, Ratings like more components
+    AddAddress, Auth, OrderDetails, Varify like some Modal
+    utils for api call Functions, helpers for colors and icons, context mainly uses
+
+Admin :
+    Listitems, Menu, Order, PromoCode, Users Manage and add update item pages
+    Alert, Auth, EditUser, MenuModal, Promocode add update modals
+    api, helper and context for project 
+
+Important Libraries : 
+Backend :
+    cloudinary - img uploadation
+    bcrypt - password encryption
+    dotenv - hide Important keys
+    express-fileupload - handle file upload like multer 
+    jwt - token genrators and validators
+    stripe - payment gateways
+    validator - check email and something in formation
+
+Frontend & Admin :
+    cloudinary - img uploadation
+    react-hot-toast - notifications
+    react-slick and slick-carousel - slider in banner just import and apply some settings 
+    react-dropzone - selection for img dropdown place
+    tailwind - css purpose 
+     

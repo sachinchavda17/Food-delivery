@@ -56,12 +56,10 @@ export const updateFood = async (req, res) => {
     const { id } = req.params;
     const { name, desc, price, category, ratings } = req.body;
 
-    console.log("ratings ", ratings);
-    console.log(typeof ratings);
-
     // Validate required fields
     if (!name || !desc || !price || !category) {
       return res.status(400).json({
+        success: false,
         error: "Name, description, price, and category are required.",
       });
     }
@@ -76,7 +74,10 @@ export const updateFood = async (req, res) => {
       if (isNaN(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
         return res
           .status(400)
-          .json({ error: "Rating must be a number between 1 and 5." });
+          .json({
+            success: false,
+            error: "Rating must be a number between 1 and 5.",
+          });
       }
       updatedData.ratings = ratingNumber;
     }
@@ -161,6 +162,9 @@ export const removeFood = async (req, res) => {
     if (!food) {
       return res.status(404).json({ success: false, error: "Food not found" });
     }
+
+    const publicId = food.image.split("/").pop().split(".")[0]; // Get public ID from the image URL
+    await cloudinary.v2.uploader.destroy(`food_images/${publicId}`);
 
     // Find the menu containing this food and remove the food reference
     await Menu.updateMany(

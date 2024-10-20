@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { FaCloudUploadAlt } from "react-icons/fa";
 import { AiOutlineClose, AiOutlineCloudUpload } from "react-icons/ai";
 import { fileUploadHandler } from "../utils/api";
-import { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
-import { useEffect } from "react";
 
 const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   const [name, setName] = useState(currentMenu ? currentMenu.name : "");
@@ -15,24 +12,31 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   const { token } = useContext(StoreContext);
 
   useEffect(() => {
-    document.body.style.overflowY = "hidden";
+    if (isOpen) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "auto"; // Ensure scrolling is re-enabled when modal closes
+    }
+    // Cleanup in case of component unmount
     return () => {
-      document.body.style.overflowY = "scroll";
+      document.body.style.overflowY = "auto"; // Reset on unmount
     };
-  }, []);
+  }, [isOpen]);
+  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name || !image) {
       toast.error("Name and image are required");
       return;
     }
-
+  
     setLoading(true);
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("image", image);
-
+  
       const response = currentMenu
         ? await fileUploadHandler(
             `/api/menu/update/${currentMenu._id}`,
@@ -41,22 +45,19 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
             token
           )
         : await fileUploadHandler("/api/menu/create", "post", formData, token);
-
+  
       if (response.success) {
         toast.success(currentMenu ? "Menu updated" : "Menu created");
-        setIsOpen(false);
-
-        if (currentMenu) {
-          setMenuData((prevItems) =>
-            prevItems.map((item) =>
-              item._id === currentMenu._id
-                ? { ...item, ...response.menuItem }
-                : item
-            )
-          );
-        } else {
-          setMenuData((prevItems) => [...prevItems, response.menuItem]);
-        }
+        setMenuData((prevItems) => {
+          if (currentMenu) {
+            return prevItems.map((item) =>
+              item._id === currentMenu._id ? { ...item, ...response.menuItem } : item
+            );
+          } else {
+            return [...prevItems, response.menuItem];
+          }
+        });
+        setIsOpen(false); // Ensure the modal closes after success
       } else {
         toast.error(response.error || "Failed to save menu");
       }
@@ -64,9 +65,10 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
       console.error(error);
       toast.error("Error saving menu");
     } finally {
-      setLoading(false);
+      setLoading(false); // Ensure loading is reset
     }
   };
+  
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -96,7 +98,7 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[90%] max-w-lg">
-        <h2 className="text-xl font-semibold mb-4">
+        <h2 className="text-xl font-semibold mb-4 dark:text-ternary">
           {currentMenu ? "Edit Menu" : "Add New Menu"}
         </h2>
         <button
@@ -139,16 +141,31 @@ const ManageModal = ({ isOpen, setIsOpen, currentMenu, setMenuData }) => {
               />
               <label
                 htmlFor="image-upload"
-                className="cursor-pointer flex flex-col items-center justify-center"
+                className="cursor-pointer flex flex-col items-center justify-center dark:text-ternary"
               >
-                <FaCloudUploadAlt className="text-2xl mb-2" />
+                <AiOutlineCloudUpload className="text-2xl mb-2" />
                 {image ? (
-                  <span>{image.name}</span>
+                  <div className="flex items-center justify-center gap-5">
+                    <span>
+                      {typeof image === "object"
+                        ? "Image selected:"
+                        : "Existing Image:"}
+                    </span>
+                    <img
+                      src={
+                        typeof image === "object"
+                          ? URL.createObjectURL(image)
+                          : image
+                      }
+                      alt=""
+                      className="w-20"
+                    />
+                  </div>
                 ) : (
                   <span className="text-gray-500">
                     {isDragging
                       ? "Drop the image here"
-                      : "Click or drag an image to upload"}
+                      : "Drag & Drop your image here, or browse"}
                   </span>
                 )}
               </label>

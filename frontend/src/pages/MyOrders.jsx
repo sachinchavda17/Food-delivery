@@ -5,10 +5,11 @@ import { StoreContext } from "../utils/StoreContext";
 import OrderDetailsModal from "../model/OrderDetailsModal";
 import { getStatusColor, getStatusIcon } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { token } = useContext(StoreContext);
   const navigate = useNavigate();
@@ -16,11 +17,17 @@ const MyOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
+        setLoading(true);
         const response = await getDataApi("/api/orders/user-order", token);
-        setOrders(response.orders);
-        setLoading(false);
+        if (response.success) {
+          setOrders(response.orders);
+        } else {
+          toast.error(response.error || "Failed to fetch your orders");
+        }
       } catch (error) {
+        toast.error(error.message || "Failed to fetch your orders");
         console.error("Error fetching orders:", error);
+      } finally {
         setLoading(false);
       }
     };
