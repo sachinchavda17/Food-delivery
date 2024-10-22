@@ -14,6 +14,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { StoreContext } from "./utils/StoreContext";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const {token} = useContext(StoreContext)
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/verify" element={<VarifyOrder />} />
                 <Route path="/myorders" element={<MyOrders />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/search" element={<SearchPage />} />
               </>
             )}
             <Route path="*" element={<NotFound />} />

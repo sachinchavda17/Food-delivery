@@ -5,7 +5,9 @@ export const listCode = async (req, res) => {
   try {
     const promoCodes = await PromoCode.find({});
     if (!promoCodes || promoCodes.length === 0) {
-      return res.status(400).json({ success: false, error: "No Promo Code Available" });
+      return res
+        .status(400)
+        .json({ success: false, error: "No Promo Code Available" });
     }
     res.status(200).json({ success: true, promoCodes });
   } catch (error) {
@@ -32,17 +34,19 @@ export const createCode = async (req, res) => {
 // Validate Promo Code
 export const validateCode = async (req, res) => {
   const { code } = req.body;
-
   try {
     const promoCode = await PromoCode.findOne({ code });
 
     if (!promoCode) {
-      return res.status(404).json({ success: false, error: "Promo code not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Promo code not found" });
     }
 
     res.status(200).json({ success: true, discount: promoCode.discount });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    // console.log(error);
+    res.status(500).json({ success: false, error: "Internal server Error" });
   }
 };
 
@@ -59,7 +63,9 @@ export const updateCode = async (req, res) => {
     );
 
     if (!updatedPromoCode) {
-      return res.status(404).json({ success: false, error: "Promo code not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Promo code not found" });
     }
 
     res.status(200).json({ success: true, updatedPromoCode });
@@ -76,12 +82,16 @@ export const deleteCode = async (req, res) => {
     const promoCode = await PromoCode.findById(id);
 
     if (!promoCode) {
-      return res.status(404).json({ success: false, error: "Promo code not found" });
+      return res
+        .status(404)
+        .json({ success: false, error: "Promo code not found" });
     }
 
     await PromoCode.findByIdAndDelete(id);
 
-    res.status(200).json({ success: true, message: "Promo code deleted successfully." });
+    res
+      .status(200)
+      .json({ success: true, message: "Promo code deleted successfully." });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

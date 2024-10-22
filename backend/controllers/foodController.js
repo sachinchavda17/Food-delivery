@@ -192,3 +192,50 @@ export const getFood = async (req, res) => {
     res.status(500).json({ error: "Failed to food removing", success: false });
   }
 };
+
+
+// Search Controller for both Menus and Foods
+
+export const searchController = async (req, res) => {
+  try {
+    const searchTerm = req.query.query;
+
+    // If search query is empty, return a 400 response
+    if (!searchTerm) {
+      return res.status(400).json({
+        success: false,
+        error: 'Search query is required',
+      });
+    }
+
+    // Create a regex to search case-insensitive and partial matches
+    const searchRegex = new RegExp(searchTerm, 'i');
+
+    // Search for foods that match either:
+    // 1. Food name matches the search term
+    // 2. Menu name (category) matches the search term
+    const foodResults = await Food.find({
+      $or: [
+        { name: { $regex: searchRegex } }, // Search in the food name
+        {
+          category: await Menu.find({ name: { $regex: searchRegex } }) // Check if the category (Menu) name matches
+        },
+      ],
+    })
+      .populate('category', 'name') // Populating only the category name field
+      .select('name image price category isAvailable ratings')
+      .lean();
+
+    // Return the food search results
+    return res.status(200).json({
+      success: true,
+      foods: foodResults,
+    });
+  } catch (error) {
+    console.error('Error searching foods:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Server error, please try again later.',
+    });
+  }
+};

@@ -15,7 +15,6 @@ const Navbar = ({ setShowAuth }) => {
     return localStorage.getItem("darkMode") === "true";
   });
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchText, setSearchText] = useState("");
   const { cartCount, token, setToken, isAdmin } = useContext(StoreContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ const Navbar = ({ setShowAuth }) => {
   };
 
   return (
-    <nav className="fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md">
+    <nav className="fixed z-40 w-full top-0 left-0 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-md transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
         {/* Logo */}
         <div
@@ -112,26 +111,18 @@ const Navbar = ({ setShowAuth }) => {
         <div className="flex items-center space-x-4 md:space-x-6">
           {/* Search Icon with Dropdown Input */}
           <div className="relative">
-            <button
+            <Link
               className="hidden md:block p-2 rounded-full text-gray-600 dark:text-gray-100"
-              onClick={handleSearchToggle}
+              to={"/search"}
             >
-              <AiOutlineSearch className="text-2xl" />
-            </button>
-            {searchOpen && (
-              <div className="absolute top-12 left-0 flex items-center bg-gray-100 dark:bg-gray-800 p-2 rounded-full w-64 shadow-lg">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  className="bg-transparent text-gray-800 dark:text-gray-100 focus:outline-none w-full pl-2"
-                />
-                <span className="ml-2 text-xl text-gray-600 dark:text-gray-100">
-                  →
-                </span>
-              </div>
-            )}
+              <AiOutlineSearch
+                className={`text-2xl text-gray-600 dark:text-gray-100 ${
+                  location.pathname === "/search"
+                    ? "text-primary dark:text-primary-dark"
+                    : ""
+                } `}
+              />
+            </Link>
           </div>
 
           {/* Cart Icon */}
@@ -227,7 +218,7 @@ const Navbar = ({ setShowAuth }) => {
         {token && (
           <Link
             to="/cart"
-            className={`flex flex-col items-center ${
+            className={`flex flex-col items-center relative ${
               location.pathname === "/cart"
                 ? "text-primary dark:text-primary-dark "
                 : ""
@@ -235,18 +226,22 @@ const Navbar = ({ setShowAuth }) => {
           >
             <AiOutlineShoppingCart className="text-2xl" />
             <span className="text-xs">Cart</span>
+            {!!cartCount && (
+              <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-400 rounded-full w-3 h-3" />
+            )}
           </Link>
         )}
-        <div
+        <Link
+          to={"/search"}
           className={`flex flex-col items-center ${
-            location.pathname === ""
+            location.pathname === "/search"
               ? "text-primary dark:text-primary-dark "
               : ""
           } `}
         >
           <AiOutlineSearch className="text-2xl" />
           <span className="text-xs">Search</span>
-        </div>
+        </Link>
 
         {!!token && (
           <Link

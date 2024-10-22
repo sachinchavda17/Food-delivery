@@ -5,6 +5,7 @@ import {
   getFood,
   listFood,
   removeFood,
+  searchController,
   updateFood,
 } from "../controllers/foodController.js";
 import fileUpload from "express-fileupload";
@@ -20,6 +21,8 @@ foodRouter.use(
 );
 
 foodRouter.get("/list", listFood);
+foodRouter.get("/search", searchController);
+
 
 foodRouter.get("/get/:id", adminAuth, getFood);
 foodRouter.post("/add", adminAuth, addFood);

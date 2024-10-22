@@ -42,16 +42,23 @@ const MyOrders = () => {
     setSelectedOrder(null);
   };
 
+  if (loading) {
+    return (
+      <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse">
+        <img src={loadingSvg} alt="Loading" className="mb-4" />
+        <span className="text-lg text-center dark:text-ternary">
+          Loading Orders...
+        </span>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8 pt-24">
+    <div className="min-h-screen container mx-auto px-4 py-8 pt-24">
       <h1 className="text-3xl font-bold text-center mb-8 dark:text-gray-100">
         My Orders
       </h1>
-      {loading ? (
-        <div className="flex justify-center animate-pulse">
-          <img src={loadingSvg} alt="Loading" className="w-16 h-16" />
-        </div>
-      ) : orders.length === 0 ? (
+      {orders.length === 0 ? (
         <p className="text-center text-gray-700 dark:text-gray-300 text-lg">
           You have no orders yet.
         </p>

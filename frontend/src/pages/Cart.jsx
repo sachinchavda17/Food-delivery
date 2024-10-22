@@ -25,20 +25,23 @@ const Cart = () => {
     e.preventDefault();
     try {
       if (!promoCode) return toast.error("Please Enter promocode");
+
       const response = await postDataApi(
         "/api/promocode/validate",
-        {
-          code: promoCode.toUpperCase(),
-        },
+        { code: promoCode.toUpperCase() },
         token
       );
+      console.log(response);
       if (response.success) {
         setDiscount(response.discount);
         toast.success("Promo code applied successfully!");
       } else {
+        setDiscount(0);
+        console.log(response.error);
         toast.error("Invalid promo code");
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.message || "Failed to apply promo code");
     }
   };
