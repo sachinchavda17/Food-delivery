@@ -208,3 +208,39 @@ export const removeOrder = async (req, res) => {
     res.status(500).json({ error: "Failed to Order removing", success: false });
   }
 };
+
+
+
+// In your order controller
+export const cancelOrderController = async (req, res) => {
+  try {
+    const orderId = req.params.id;
+
+    // Find the order
+    const order = await Order.findById(orderId);
+
+    // Check if the order can be canceled (e.g., it hasn't been shipped yet)
+    if (order.orderStatus !== 'Pending') {
+      return res.status(400).json({
+        success: false,
+        error: 'Only pending orders can be cancelled',
+      });
+    }
+
+    // Update order status to "Cancelled"
+    order.orderStatus = 'Cancelled';
+    await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Order has been cancelled',
+      order,
+    });
+  } catch (error) {
+    console.error('Error cancelling order:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error, please try again later.',
+    });
+  }
+};

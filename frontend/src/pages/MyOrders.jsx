@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isCancelOrder,setIsCancelOrder] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const { token } = useContext(StoreContext);
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const MyOrders = () => {
       }
     };
     fetchOrders();
-  }, [token]);
+  }, [token,isCancelOrder]);
 
   const openOrderDetails = (order) => {
     setSelectedOrder(order);
@@ -107,6 +108,7 @@ const MyOrders = () => {
           order={selectedOrder}
           isOpen={!!selectedOrder}
           onClose={closeOrderDetails}
+          setIsCancelOrder = {setIsCancelOrder}
         />
       )}
     </div>

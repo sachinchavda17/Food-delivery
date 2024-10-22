@@ -24,7 +24,7 @@ const StoreContextProvider = ({ children }) => {
         count += item.quantity;
         subTotal += item.food.price * item.quantity; // Calculate original price
 
-        if (discount) {
+        if (discount > 0) {
           discountAmount +=
             ((item.food.price * discount) / 100) * item.quantity; // Calculate discount amount
         }
@@ -33,7 +33,7 @@ const StoreContextProvider = ({ children }) => {
 
     setCartCount(count);
     setCartSubTotal(Math.round(subTotal)); // Set original subtotal before discount
-    if (discount) setDiscountedSubTotal(Math.round(discountAmount)); // Set final subtotal after discount
+    if (discount > 0) setDiscountedSubTotal(Math.round(discountAmount)); // Set final subtotal after discount
   }, [cartItems, discount]);
 
   const getAllFoods = async () => {
@@ -86,9 +86,9 @@ const StoreContextProvider = ({ children }) => {
 
   const addToCart = async (item, quantity) => {
     try {
-      if(!token) {
-        toast.error("Please Login to add Items in Cart.")
-        return
+      if (!token) {
+        toast.error("Please Login to add Items in Cart.");
+        return;
       }
       const response = await postDataApi(
         `/api/carts/add`,

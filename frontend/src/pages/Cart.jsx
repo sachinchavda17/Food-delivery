@@ -10,10 +10,9 @@ const Cart = () => {
   const {
     cartItems,
     removeFromCart,
-    cartSubTotal,
     discount,
     setDiscount,
-    discountedSubTotal,
+    setDiscountedSubTotal,
     token,
   } = useContext(StoreContext);
   const [promoCode, setPromoCode] = useState("");
@@ -31,17 +30,19 @@ const Cart = () => {
         { code: promoCode.toUpperCase() },
         token
       );
-      console.log(response);
       if (response.success) {
         setDiscount(response.discount);
+        setDiscountedSubTotal(0)
         toast.success("Promo code applied successfully!");
       } else {
         setDiscount(0);
-        console.log(response.error);
+        // console.log(response.error);
         toast.error("Invalid promo code");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      setDiscount(0);
+      setDiscountedSubTotal(0)
       toast.error(error.message || "Failed to apply promo code");
     }
   };

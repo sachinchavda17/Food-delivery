@@ -40,7 +40,7 @@ export const validateCode = async (req, res) => {
     if (!promoCode) {
       return res
         .status(404)
-        .json({ success: false, error: "Promo code not found" });
+        .json({ success: false, error: "Invalid Promo code" });
     }
 
     res.status(200).json({ success: true, discount: promoCode.discount });

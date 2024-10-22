@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middleware/auth.js";
 import {
+  cancelOrderController,
   listOrders,
   placeOrder,
   removeOrder,
@@ -14,6 +15,7 @@ const router = express.Router();
 router.post("/place", authMiddleware, placeOrder);
 router.post("/verify",authMiddleware, verifyOrder);
 router.get("/user-order", authMiddleware, userOrders);
+router.put('/:id/cancel', cancelOrderController);
 
 router.get("/list-order", adminAuth,listOrders);
 router.put("/update-order",adminAuth, updateOrder);
