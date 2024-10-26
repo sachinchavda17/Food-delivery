@@ -5,7 +5,7 @@ const MenuCard = ({ menu, handleEdit, handleDeleteClick }) => {
   return (
     <div
       key={menu._id}
-      className="min-w-30 max-w-44 transition duration-300   hover:shadow-lg shadow-md dark:shadow-background-dark dark:text-ternary p-4 rounded-lg"
+      className="w-28 sm:w-32 md:w-36 transition duration-300   hover:shadow-lg shadow-md dark:shadow-background-dark dark:text-ternary p-4 rounded-lg"
     >
       <img
         src={menu.image}

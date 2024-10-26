@@ -34,11 +34,11 @@ const OrderRow = ({
         key={order._id}
         className="border-b dark:border-gray-600 hover:bg-ternary transition dark:hover:bg-secondary-dark"
       >
-        <td className="py-3 px-4">{order._id}</td>
+        <td className="py-3 px-4">#{order._id}</td>
         <td className="py-3 px-4">
           {new Date(order.createdAt).toLocaleDateString()}
         </td>
-        <td className="py-3 px-4">&#8377;{order.totalPrice}</td>
+        <td className="py-3 px-4">&#8377;{Math.round(order.totalPrice)}</td>
         <td className="py-3 px-4">
           {editOrderId === order._id ? (
             <select
@@ -49,7 +49,7 @@ const OrderRow = ({
                   paymentStatus: e.target.value,
                 })
               }
-              className="border p-1 rounded"
+              className="w-full px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition "
             >
               <option value="Pending">Pending</option>
               <option value="Paid">Paid</option>
@@ -75,7 +75,7 @@ const OrderRow = ({
                   orderStatus: e.target.value,
                 })
               }
-              className="border p-1 rounded"
+              className="w-full px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:text-gray-200 transition"
             >
               <option value="Pending">Pending</option>
               <option value="Out for Delivery">Out for Delivery</option>

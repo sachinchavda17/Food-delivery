@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 import loadingSvg from "../assets/loading.svg";
-import OrderDetailsModal from "../model/OrderDetailsModal";
+import OrderDetailsModal from "../modal/OrderDetailsModal";
 const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});

@@ -119,10 +119,10 @@ const ManageUsers = () => {
             <thead className="bg-primary dark:bg-primary-dark text-ternary ">
               <tr>
                 <th className="py-3 px-4 font-semibold">UserId</th>
-                <th className="py-3 px-4 font-semibold">Signed Date</th>
-                <th className="py-3 px-4 font-semibold">Email</th>
                 <th className="py-3 px-4 font-semibold">Name</th>
+                <th className="py-3 px-4 font-semibold">Email</th>
                 <th className="py-3 px-4 font-semibold">Role</th>
+                <th className="py-3 px-4 font-semibold">Signed Date</th>
                 <th className="py-3 px-4 font-semibold">Last Update</th>
                 <th className="py-3 px-4 font-semibold">Actions</th>
               </tr>

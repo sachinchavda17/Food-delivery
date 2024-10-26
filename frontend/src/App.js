@@ -1,23 +1,23 @@
 import React, { useContext, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Home from "./pages/Home";
-import Footer from "./components/Footer";
-import AuthModal from "./model/AuthModal";
 import { toast, Toaster } from "react-hot-toast";
+import Home from "./pages/Home";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
-import VarifyOrder from "./model/VarifyOrder";
 import MyOrders from "./pages/MyOrders";
 import Menu from "./pages/Menu";
-import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
-import { StoreContext } from "./utils/StoreContext";
 import SearchPage from "./pages/SearchPage";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
+import AuthModal from "./modal/AuthModal";
+import VarifyOrder from "./modal/VarifyOrder";
+import { StoreContext } from "./utils/StoreContext";
 
 function App() {
-  const {token} = useContext(StoreContext)
+  const { token } = useContext(StoreContext);
   const [showAuth, setShowAuth] = useState(false);
   return (
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
@@ -28,6 +28,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/search" element={<SearchPage />} />
             {token && (
               <>
                 <Route path="/cart" element={<Cart />} />
@@ -35,7 +36,6 @@ function App() {
                 <Route path="/verify" element={<VarifyOrder />} />
                 <Route path="/myorders" element={<MyOrders />} />
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/search" element={<SearchPage />} />
               </>
             )}
             <Route path="*" element={<NotFound />} />

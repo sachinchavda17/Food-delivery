@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { getDataApi } from "../utils/api";
 import loadingSvg from "../assets/loading.svg";
 import { StoreContext } from "../utils/StoreContext";
-import OrderDetailsModal from "../model/OrderDetailsModal";
+import OrderDetailsModal from "../modal/OrderDetailsModal";
 import { getStatusColor, getStatusIcon } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";

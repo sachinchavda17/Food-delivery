@@ -4,7 +4,7 @@ import { StoreContext } from "../utils/StoreContext";
 import { postDataApi, getDataApi, updateData } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import AddAddressModal from "../model/AddAddressModal";
+import AddAddressModal from "../modal/AddAddressModal";
 import CartTotal from "../components/CartTotal";
 
 const Checkout = () => {

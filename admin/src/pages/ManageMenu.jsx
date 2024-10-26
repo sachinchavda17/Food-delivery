@@ -75,7 +75,7 @@ const ManageMenu = () => {
     return (
       <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
         <img src={loadingSvg} alt="Loading" />
-        <span className="ml-2 text-lg">Loading Menu's...</span>
+        <span className="ml-2 text-lg dark:text-ternary">Loading Menu's...</span>
       </div>
     );
   }

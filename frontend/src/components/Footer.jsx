@@ -112,6 +112,7 @@ const Footer = () => {
             <div className="flex space-x-4">
               <a
                 href={portfolio ? portfolio : "/"}
+                target="_blank"
                 aria-label="portfolio"
                 className="hover:text-primary dark:hover:text-primary-dark hover:cursor-pointer"
               >

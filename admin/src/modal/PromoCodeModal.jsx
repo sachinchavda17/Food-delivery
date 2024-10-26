@@ -77,10 +77,10 @@ const PromoCodeModal = ({
         </h2>
         <button
           onClick={() => setIsOpen(false)}
-          className="absolute top-4 right-4 p-2 rounded-full bg-gray-200 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 transition"
+          className="absolute top-4 right-4 p-2 rounded-lg bg-gray-200 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-300 transition"
           aria-label="Close Modal"
         >
-          <AiOutlineClose className="text-xl" />
+          <AiOutlineClose className="text-lg" />
           
         </button>
         <form onSubmit={handleSubmit}>

@@ -76,7 +76,7 @@ const ManagePromoCode = () => {
     return (
       <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
         <img src={loadingSvg} alt="Loading" />
-        <span className="ml-2 text-lg">Loading Promo Codes...</span>
+        <span className="ml-2 text-lg dark:text-ternary">Loading Promo Codes...</span>
       </div>
     );
   }
@@ -89,7 +89,7 @@ const ManagePromoCode = () => {
 
       <div className="flex flex-wrap items-center justify-center gap-6 ">
         <button
-          className="dark:shadow-background-dark dark:text-ternary shadow-md hover:shadow-lg px-4 py-10 rounded flex flex-col items-center transition duration-300"
+          className="dark:shadow-background-dark dark:text-ternary shadow-md hover:shadow-lg px-4 py-10 rounded flex flex-col items-center transition duration-300 hover:scale-105"
           onClick={handleAddNew}
         >
           <FaPlus className="mb-2" /> <span>Add New Promo Code</span>
@@ -103,24 +103,24 @@ const ManagePromoCode = () => {
           promoCodes.map((promoCode) => (
             <div
               key={promoCode._id}
-              className="p-6  rounded-lg hover:shadow-lg shadow-md transition-transform transform dark:shadow-background-dark"
+              className="p-4 rounded-lg hover:shadow-lg shadow-md transition-transform transform dark:shadow-background-dark hover:scale-105"
             >
-              <h3 className="text-xl font-bold mb-2 text-gray-800 dark:text-white">
+              <h3 className="sm:text-xl font-bold mb-2 text-gray-800 dark:text-white">
                 {promoCode.code}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
+              <p className=" text-xs sm:text-md text-gray-600 dark:text-gray-400 mb-2">
                 Discount:{" "}
                 <span className="font-semibold">{promoCode.discount}%</span>
               </p>
-              <div className="flex justify-between gap-4">
+              <div className="flex justify-between gap-5">
                 <button
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+                  className="text-blue-500 hover:text-blue-600  font-semibold py-2 px-3 rounded-lg transition-all duration-300"
                   onClick={() => handleEdit(promoCode)}
                 >
                   <FaEdit className="text-lg" />
                 </button>
                 <button
-                  className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300"
+                  className="text-red-500 hover:text-red-600 font-semibold py-2 px-4 rounded-lg transition-all duration-300"
                   onClick={() => handleDeleteClick(promoCode)}
                 >
                   <FaTrash className="text-lg" />
