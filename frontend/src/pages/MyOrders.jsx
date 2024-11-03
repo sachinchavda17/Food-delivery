@@ -68,7 +68,7 @@ const MyOrders = () => {
           {orders.map((order) => (
             <div
               key={order._id}
-              className="bg-white dark:bg-gray-800 rounded-lg p-6 relative transition duration-300 shadow-lg hover:shadow-2xl dark:shadow-secondary dark:hover:shadow-secondary dark:shadow-lg dark:hover:shadow-2xl"
+              className="bg-white dark:bg-gray-800 rounded-lg p-6 relative transition duration-300 shadow-lg hover:shadow-2xl dark:shadow-secondary dark:hover:shadow-secondary dark:shadow-lg dark:hover:shadow-2xl hover:scale-105"
             >
               <div className="absolute top-4 right-4">
                 {getStatusIcon(order.orderStatus)}

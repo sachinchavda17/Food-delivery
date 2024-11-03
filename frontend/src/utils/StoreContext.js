@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { getDataApi, postDataApi, deleteDataApi } from "./api";
 import { toast } from "react-hot-toast";
+import Refresh from "../components/Refresh";
 
 export const StoreContext = createContext();
 
@@ -39,7 +40,12 @@ const StoreContextProvider = ({ children }) => {
   const getAllFoods = async () => {
     try {
       const res = await getDataApi("/api/foods/list");
-      setFoods(res.foods);
+      console.log(res);
+      if(res.success){
+        setFoods(res.foods);
+      }else{
+        toast.error(res.error|| "Failed to load foods")
+      }
     } catch (error) {
       toast.error("Failed to load foods");
     }

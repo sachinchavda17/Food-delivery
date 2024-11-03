@@ -15,10 +15,6 @@ const CartTotal = () => {
         <p>Subtotal</p>
         <p>&#8377;{cartSubTotal}</p>
       </div>
-      <div className="flex justify-between">
-        <p>Delivery Fee</p>
-        <p>{deliveryFee}</p>
-      </div>
       {discount > 0 && (
         <div className="flex justify-between text-gray-700 dark:text-gray-200">
           <p className="text-sm text-green-600 dark:text-green-400">
@@ -27,6 +23,10 @@ const CartTotal = () => {
           <p>-&#8377;{calculatedDiscount}</p>
         </div>
       )}
+      <div className="flex justify-between">
+        <p>Delivery Fee</p>
+        <p>{deliveryFee}</p>
+      </div>
       <hr className="my-2" />
       <div className="flex justify-between font-bold">
         <p>Total</p>

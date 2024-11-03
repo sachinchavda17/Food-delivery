@@ -189,7 +189,7 @@ const Checkout = () => {
           <CartTotal />
           <button
             type="submit"
-            className="mt-4 w-full bg-primary text-white py-3 rounded-lg hover:bg-accent transition"
+            className="mt-4 w-full bg-primary text-white py-3 rounded-lg hover:bg-accent transition hover:scale-105"
             disabled={loading}
           >
             {loading
@@ -199,7 +199,6 @@ const Checkout = () => {
               : "PROCEED TO PAYMENT"}
           </button>
         </div>
-        {/* <CartTotal btnName={"Place Order"} navigatePage={"/"} /> */}
       </form>
 
       {/* Address Popup Modal */}

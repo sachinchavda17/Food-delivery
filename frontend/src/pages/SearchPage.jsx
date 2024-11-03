@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import {useNavigate} from "react-router-dom"
 import { FaSearch, FaTimesCircle } from "react-icons/fa";
 import loadingSvg from "../assets/loading.svg";
 import { getDataApi } from "../utils/api";
@@ -13,6 +14,7 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
   const { token } = useContext(StoreContext);
+  const navigate = useNavigate()
 
   // Fetch search results based on the search term
   const handleSearch = async (term) => {
@@ -20,6 +22,7 @@ const SearchPage = () => {
 
     setLoading(true);
     setNoResults(false);
+    navigate(`/search?query=${term}`)
     try {
       const response = await getDataApi(`/api/foods/search?query=${term}`);
       if (response.success) {
@@ -31,7 +34,6 @@ const SearchPage = () => {
         toast.error(response.error || "Failed to fetch search results.");
       }
     } catch (error) {
-      console.log(error);
       toast.error("Error occurred while searching.");
     } finally {
       setLoading(false);
@@ -45,6 +47,7 @@ const SearchPage = () => {
 
   const handleClearSearch = () => {
     setSearchTerm("");
+    navigate(`/search`)
     setSearchResults([]);
     setNoResults(false);
   };
