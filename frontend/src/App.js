@@ -15,34 +15,43 @@ import ScrollToTop from "./components/ScrollToTop";
 import AuthModal from "./modal/AuthModal";
 import VarifyOrder from "./modal/VarifyOrder";
 import { StoreContext } from "./utils/StoreContext";
+import NoInternetPage from "./pages/NoInternatePage";
 
 function App() {
   const { token } = useContext(StoreContext);
   const [showAuth, setShowAuth] = useState(false);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
   return (
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
       {showAuth && <AuthModal showAuth={showAuth} setShowAuth={setShowAuth} />}
       <Navbar setShowAuth={setShowAuth} />
-      <div className="app w-[90%] md:w-[80%] m-auto">
-        <ScrollToTop>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/search" element={<SearchPage />} />
-            {token && (
-              <>
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/verify" element={<VarifyOrder />} />
-                <Route path="/myorders" element={<MyOrders />} />
-                <Route path="/profile" element={<Profile />} />
-              </>
-            )}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </ScrollToTop>
-      </div>
-      <Footer />
+      {!isOnline ? (
+        <NoInternetPage isOnline={isOnline} setIsOnline={setIsOnline} />
+      ) : (
+        <>
+          <div className="app w-[90%] md:w-[80%] m-auto">
+            <ScrollToTop>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/search" element={<SearchPage />} />
+                {token && (
+                  <>
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/verify" element={<VarifyOrder />} />
+                    <Route path="/myorders" element={<MyOrders />} />
+                    <Route path="/profile" element={<Profile />} />
+                  </>
+                )}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ScrollToTop>
+          </div>
+          <Footer />
+        </>
+      )}
       <Toaster />
     </div>
   );
