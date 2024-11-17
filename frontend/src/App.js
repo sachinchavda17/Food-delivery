@@ -20,8 +20,21 @@ import NoInternetPage from "./pages/NoInternatePage";
 function App() {
   const { token } = useContext(StoreContext);
   const [showAuth, setShowAuth] = useState(false);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+  
   return (
     <div className="dark:bg-secondary-dark bg-background transition-all duration-300">
       {showAuth && <AuthModal showAuth={showAuth} setShowAuth={setShowAuth} />}
