@@ -81,6 +81,9 @@ const OrderDetailsModal = ({ order, isOpen, onClose, setIsCancelOrder }) => {
           </span>
         </p>
         <p className="dark:text-gray-300 mb-2">
+          Order Created: {new Date(order.createdAt).toLocaleString()}
+        </p>
+        <p className="dark:text-gray-300 mb-2">
           Updates: {new Date(order.updatedAt).toLocaleString()}
         </p>
         <p className="dark:text-gray-300 mb-2">

@@ -157,7 +157,7 @@ export const userOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.body.userId }).populate(
       "items.food"
-    );
+    ).sort({ updatedAt: -1 }); 
     res.json({ success: true, orders });
   } catch (error) {
     console.error("Error fetching user orders:", error);
