@@ -1,36 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { getDataApi } from "../utils/api";
+import React, { useState, useContext } from "react";
 import MenuItem from "../components/MenuItem";
 import { StoreContext } from "../utils/StoreContext";
 import loadingSvg from "../assets/loading.svg";
-import { toast } from "react-hot-toast";
 import Foods from "../components/Foods";
 import Refresh from "../components/Refresh";
 
 const Menu = () => {
-  const [menuItems, setMenuItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const { token } = useContext(StoreContext);
+  const {menuItems, loading} = useContext(StoreContext);
   const [category, setCategory] = useState("");
-
-  useEffect(() => {
-    const fetchMenu = async () => {
-      try {
-        setLoading(true);
-        const response = await getDataApi("/api/menu/list");
-        if (!response.success) {
-          toast.error(response.error || "Failed to fetch menu details.");
-        } else {
-          setMenuItems(response.menuItems);
-        }
-      } catch (error) {
-        toast.error("Failed to fetch menu details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMenu();
-  }, [token]);
 
   if (loading) {
     return (

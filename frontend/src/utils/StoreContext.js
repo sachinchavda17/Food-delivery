@@ -1,7 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { getDataApi, postDataApi, deleteDataApi } from "./api";
 import { toast } from "react-hot-toast";
-import Refresh from "../components/Refresh";
 
 export const StoreContext = createContext();
 
@@ -12,8 +11,10 @@ const StoreContextProvider = ({ children }) => {
   const [cartSubTotal, setCartSubTotal] = useState(0);
   const [discountedSubTotal, setDiscountedSubTotal] = useState(0);
   const [foods, setFoods] = useState([]);
+  const [menuItems, setMenuItems] = useState([]);
   const [token, setToken] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let count = 0;
@@ -39,15 +40,34 @@ const StoreContextProvider = ({ children }) => {
 
   const getAllFoods = async () => {
     try {
+      setLoading(true);
       const res = await getDataApi("/api/foods/list");
       console.log(res);
-      if(res.success){
+      if (res.success) {
         setFoods(res.foods);
-      }else{
-        toast.error(res.error|| "Failed to load foods")
+      } else {
+        toast.error(res.error || "Failed to load foods");
       }
     } catch (error) {
       toast.error("Failed to load foods");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMenu = async () => {
+    try {
+      setLoading(true);
+      const response = await getDataApi("/api/menu/list");
+      if (!response.success) {
+        toast.error(response.error || "Failed to fetch menu details.");
+      } else {
+        setMenuItems(response.menuItems);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch menu details.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,6 +86,7 @@ const StoreContextProvider = ({ children }) => {
   useEffect(() => {
     // Fetch all foods or any initial data
     getAllFoods();
+    fetchMenu();
     if (token) {
       getCarts();
     }
@@ -73,6 +94,7 @@ const StoreContextProvider = ({ children }) => {
 
   const getCarts = async () => {
     try {
+      setLoading(true);
       const token =
         localStorage.getItem("userToken") || localStorage.getItem("adminToken");
       if (token) {
@@ -87,6 +109,8 @@ const StoreContextProvider = ({ children }) => {
       }
     } catch (error) {
       toast.error("Failed to fetch carts");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,6 +233,10 @@ const StoreContextProvider = ({ children }) => {
     setDiscount,
     discountedSubTotal,
     setDiscountedSubTotal,
+    loading,
+    setLoading,
+    menuItems,
+    setMenuItems,
   };
   return (
     <StoreContext.Provider value={contextValue}>

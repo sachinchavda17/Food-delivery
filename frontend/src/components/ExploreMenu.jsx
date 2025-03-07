@@ -3,38 +3,28 @@ import { getDataApi } from "../utils/api";
 import { StoreContext } from "../utils/StoreContext";
 import toast from "react-hot-toast";
 import loadingSvg from "../assets/loading.svg";
+import Refresh from "./Refresh";
 
 const ExploreMenu = ({ category, setCategory }) => {
-  const { token } = useContext(StoreContext);
-  const [loading, setLoading] = useState(false);
-  const [menuData, setMenuData] = useState([]);
-  console.log(category);
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await getDataApi("/api/menu/list");
-      console.log(response.menuItems);
-      if (!response.success) {
-        toast.error(response?.error || "Failed to get menu list.");
-      } else {
-        setMenuData(response?.menuItems);
-      }
-    } catch (error) {
-      toast.error("Failed to fetch data");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [token]);
+  const { loading, menuItems } = useContext(StoreContext);
 
   if (loading) {
     return (
       <div className="w-full flex justify-center items-center py-10 animate-pulse transition">
         <img src={loadingSvg} alt="Loading" className="w-20" />
+        <span className="ml-2 text-lg dark:text-ternary">Loading Menu's...</span>
+
+      </div>
+    );
+  }
+  
+  if (menuItems.length === 0 && !loading) {
+    return (
+      <div className="pb-5 mt-2 pt-5">
+        <p className="text-center text-lg mt-5 text-gray-500 dark:text-gray-300">
+          No menu available please Refresh.
+        </p>
+        <Refresh />
       </div>
     );
   }
@@ -49,7 +39,7 @@ const ExploreMenu = ({ category, setCategory }) => {
       </p>
 
       <div className="flex justify-between items-center gap-7 py-2 text-center mt-5 overflow-x-scroll no-scrollbar">
-        {menuData.map((item, index) => (
+        {menuItems.map((item, index) => (
           <div
             key={index}
             className="flex flex-col items-center"

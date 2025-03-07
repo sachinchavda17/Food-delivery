@@ -169,7 +169,7 @@ export const userOrders = async (req, res) => {
 
 export const listOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).populate("user items.food");
+    const orders = await Order.find({}).populate("user items.food").sort({ updatedAt: -1 }); 
     res.json({ success: true, orders });
   } catch (error) {
     console.error("Error listing orders:", error);

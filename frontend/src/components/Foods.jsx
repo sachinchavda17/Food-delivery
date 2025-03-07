@@ -2,16 +2,17 @@ import React, { useContext } from "react";
 import { StoreContext } from "../utils/StoreContext";
 import FoodItem from "./FoodItem";
 import Refresh from "./Refresh";
+import loadingSvg from "../assets/loading.svg";
 
 const Foods = ({ category, heading }) => {
-  const { foods } = useContext(StoreContext);
+  const { foods, loading } = useContext(StoreContext);
 
   // Filter the foods based on the selected category
   const filteredFoods = foods.filter(
     (item) => category === "All" || category === item.category.name
   );
 
-  if (filteredFoods.length === 0) {
+  if (filteredFoods.length === 0 && !loading) {
     return (
       <div className="pb-5 mt-2">
         <p className="text-center text-lg mt-5 text-gray-500 dark:text-gray-300">
@@ -21,6 +22,15 @@ const Foods = ({ category, heading }) => {
       </div>
     );
   }
+
+   if (loading) {
+      return (
+        <div className="w-full flex justify-center flex-col items-center min-h-screen animate-pulse transition">
+          <img src={loadingSvg} alt="Loading" />
+          <span className="ml-2 text-lg dark:text-ternary">Loading Foods...</span>
+        </div>
+      );
+    }
 
   return (
     <div className="pb-5 mt-2">

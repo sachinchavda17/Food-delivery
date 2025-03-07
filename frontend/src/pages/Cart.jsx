@@ -40,7 +40,6 @@ const Cart = () => {
         toast.error("Invalid promo code");
       }
     } catch (error) {
-      // console.log(error);
       setDiscount(0);
       setDiscountedSubTotal(0)
       toast.error(error.message || "Failed to apply promo code");
@@ -55,6 +54,9 @@ const Cart = () => {
           <p className="text-xl text-gray-500 dark:text-ternary-light">
             Oops! Your cart is empty.
           </p>
+          <button onClick={()=>navigate("/")} className='bg-primary hover:bg-accent transition-all duration-300 px-3 py-2 my-5 rounded-lg focus:ring-2  ring-accent '>
+            Continue Shopping
+        </button>
         </div>
       ) : (
         <>
